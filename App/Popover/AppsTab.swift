@@ -2,6 +2,7 @@ import NetPulseCore
 import SwiftUI
 
 struct AppsTab: View {
+    private static let visibleRows = 10
     @Environment(AppModel.self) private var model
 
     var body: some View {
@@ -26,11 +27,16 @@ struct AppsTab: View {
                     .font(.system(size: 12)).foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity).padding(.vertical, 24)
             } else {
-                VStack(spacing: 0) {
-                    ForEach(ranked) { app in
-                        AppRow(app: app, peak: peak)
+                // The list scrolls inside a bounded height so the panel never grows past the screen.
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ForEach(ranked) { app in
+                            AppRow(app: app, peak: peak)
+                        }
                     }
                 }
+                .scrollIndicators(.automatic)
+                .frame(height: AppRow.height * CGFloat(min(ranked.count, Self.visibleRows)))
             }
         }
         .padding(.horizontal, 14).padding(.vertical, 12)
@@ -39,6 +45,7 @@ struct AppsTab: View {
 }
 
 private struct AppRow: View {
+    static let height: CGFloat = 34
     let app: AppUsage
     let peak: UInt64
 
@@ -64,7 +71,7 @@ private struct AppRow: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             UsageText(totals: Totals(down: app.down, up: app.up))
         }
-        .padding(.vertical, 4)
+        .frame(height: Self.height)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(app.displayName): downloaded \(Spoken.text(ByteFormatter.bytes(app.down))), uploaded \(Spoken.text(ByteFormatter.bytes(app.up)))")
     }

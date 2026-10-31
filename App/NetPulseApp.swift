@@ -36,6 +36,9 @@ struct NetPulseApp: App {
             live.settingsTab = tab
             Task { @MainActor in await SettingsProbe.open(model: live) }
         }
+        if let directory = TabsProbe.directory {
+            Task { @MainActor in await TabsProbe.run(model: live, directory: directory) }
+        }
         if CommandLine.arguments.contains("--probe-status-item") {
             Task { @MainActor in await StatusItemProbe.run(model: live) }
         }
