@@ -144,54 +144,110 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 		<section class="facts-section">
 			<div class="wrap">
 				<div class="facts" data-reveal>
-					<div class="fact"><b><span data-count="1">0</span> s</b><span>live speed refresh</span></div>
-					<div class="fact"><b>~<span data-count="1">0</span>%</b><span>CPU, measured on Apple Silicon</span></div>
-					<div class="fact"><b><span data-count="1">0</span> MB</b><span>download size</span></div>
-					<div class="fact"><b><span data-count="0">0</span></b><span>accounts, trackers or uploads</span></div>
+					<div class="fact" style="--c:#0a84ff">
+						<span class="chip"><svg viewBox="0 0 20 20"><path d="M3 11h3l2-6 4 10 2-4h3" /></svg></span>
+						<b>1&nbsp;s</b><span>live speed refresh</span>
+					</div>
+					<div class="fact" style="--c:#30a46c">
+						<span class="chip"><svg viewBox="0 0 20 20"><rect x="5" y="5" width="10" height="10" rx="2" /><path d="M8 2v3M12 2v3M8 15v3M12 15v3M2 8h3M2 12h3M15 8h3M15 12h3" /></svg></span>
+						<b>~1%</b><span>CPU, measured on Apple Silicon</span>
+					</div>
+					<div class="fact" style="--c:#af52de">
+						<span class="chip"><svg viewBox="0 0 20 20"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 16h12" /></svg></span>
+						<b>1&nbsp;MB</b><span>download size</span>
+					</div>
+					<div class="fact" style="--c:#ff9f0a">
+						<span class="chip"><svg viewBox="0 0 20 20"><path d="M10 2.5 4 5v4.5c0 3.8 2.6 6.9 6 8 3.4-1.1 6-4.2 6-8V5l-6-2.5Z" /><path d="m7.5 10 1.8 1.8 3.4-3.6" /></svg></span>
+						<b>0</b><span>accounts, trackers or uploads</span>
+					</div>
 				</div>
 			</div>
 		</section>
 
-		<section id="measuring">
+		<section id="measuring" class="tint-blue">
 			<div class="wrap">
-				<p class="kicker">How it measures</p>
+				<p class="kicker pill" style="--c:#0a84ff">How it measures</p>
 				<h2>Honest numbers, including what it can't see.</h2>
-				<div class="grid" data-reveal>
-					<div class="item"><h3>Network totals</h3><p>Read from the macOS 64-bit interface counters every second. Virtual interfaces like VPN tunnels are never counted twice.</p></div>
-					<div class="item"><h3>Per-app usage</h3><p>From macOS's built-in <code>nettop</code>, sampled every 10 seconds, with helper processes grouped under their app.</p></div>
-					<div class="item"><h3>Other / system</h3><p>Protocol overhead and very short-lived processes get their own row, so the per-app list always adds up to the total.</p></div>
-					<div class="item"><h3>Device traffic, not your bill</h3><p>NetPulse counts what your Mac sends and receives. Your provider may count differently. Time when NetPulse isn't running is marked as missing.</p></div>
+				<div class="bento" data-reveal>
+					<article class="tile wide">
+						<div class="viz viz-spark" aria-hidden="true">
+							<svg viewBox="0 0 400 90" preserveAspectRatio="none"><defs><linearGradient id="mz" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0a84ff" stop-opacity=".3" /><stop offset="1" stop-color="#0a84ff" stop-opacity="0" /></linearGradient></defs><path d="M0 70 C40 66 60 30 90 38 S140 72 170 60 220 18 250 26 300 64 330 50 370 30 400 34 V90 H0Z" fill="url(#mz)" /><path class="draw" d="M0 70 C40 66 60 30 90 38 S140 72 170 60 220 18 250 26 300 64 330 50 370 30 400 34" fill="none" stroke="#0a84ff" stroke-width="2.5" /><path class="draw d2" d="M0 82 C50 80 80 70 120 74 S190 82 230 76 300 70 340 74 380 78 400 76" fill="none" stroke="#30a46c" stroke-width="2" /></svg>
+							<span class="tag">en0 · 64-bit counters · every 1 s</span>
+						</div>
+						<h3>Network totals</h3>
+						<p>Read straight from the macOS interface counters every second. VPN tunnels and other virtual interfaces are never counted twice.</p>
+					</article>
+					<article class="tile">
+						<div class="viz viz-group" aria-hidden="true">
+							<div class="grp"><span class="p-ic sm" style="background:#f4b400">GC</span><b>Google Chrome</b></div>
+							<div class="helpers"><span>Helper</span><span>Helper (GPU)</span><span>Helper (Renderer)</span><span>+17</span></div>
+						</div>
+						<h3>Per-app usage</h3>
+						<p>From macOS's built-in <code>nettop</code> every 10 s. Helpers roll up under the app they belong to.</p>
+					</article>
+					<article class="tile">
+						<div class="viz viz-stack" aria-hidden="true">
+							<div class="stack"><i style="flex:46;background:#1e90ff"></i><i style="flex:16;background:#2d8cff;opacity:.75"></i><i style="flex:10;background:#8e8e93"></i><i style="flex:8;background:#611f69"></i><i style="flex:6;background:#1db954"></i><i style="flex:14" class="oth"></i></div>
+							<div class="stack-legend"><span>apps</span><span class="oth-l">Other / system</span><span>= total</span></div>
+						</div>
+						<h3>Other / system</h3>
+						<p>Overhead and short-lived processes get their own row, so the list always adds up.</p>
+					</article>
+					<article class="tile wide">
+						<div class="viz viz-days" aria-hidden="true">
+							{Array.from({ length: 14 }, (_, i) => (
+								<i class={i === 5 || i === 6 ? 'gap' : ''} style={`height:${i === 5 || i === 6 ? 100 : 30 + Math.abs(Math.sin(i * 1.3)) * 60}%`}></i>
+							))}
+							<span class="tag warn">Not monitored · NetPulse wasn't running</span>
+						</div>
+						<h3>Device traffic, not your bill</h3>
+						<p>NetPulse counts what your Mac sends and receives; your provider may count differently. Days when it wasn't running are marked, not guessed.</p>
+					</article>
 				</div>
 			</div>
 		</section>
 
-		<section id="privacy">
+		<section id="privacy" class="tint-green">
 			<div class="wrap split">
 				<div>
-					<p class="kicker">Privacy</p>
+					<p class="kicker pill" style="--c:#30a46c">Privacy</p>
 					<h2>Local by design.</h2>
-					<p class="sub">No account, no telemetry, and NetPulse makes no network connections of its own. Your history is a small SQLite file on your Mac that you can delete any time.</p>
+					<p class="sub">No account, no telemetry, and NetPulse makes no network connections of its own. Your history is a small SQLite file in <code>~/Library/Application Support/NetPulse</code> that you can delete any time.</p>
+					<a class="btn btn-ghost" href={repo} style="margin-top:24px">Read every line on GitHub →</a>
 				</div>
-				<ul class="ticks" data-reveal>
-					<li><strong>Location</strong> is asked once, only to read your Wi-Fi network's name. Decline and NetPulse names networks by their router instead.</li>
-					<li><strong>Notifications</strong> are asked for only when you turn on a cap.</li>
-					<li>Data lives in <code>~/Library/Application Support/NetPulse</code>.</li>
-					<li>MIT licensed. Read every line on GitHub.</li>
-				</ul>
+				<div class="perm" data-reveal>
+					<div class="perm-head"><span class="lights"><i></i><i></i><i></i></span>What NetPulse can access</div>
+					<div class="perm-row"><span class="pi" style="background:#0a84ff"><svg viewBox="0 0 20 20"><path d="M10 17s5-4.6 5-9a5 5 0 0 0-10 0c0 4.4 5 9 5 9Z" /><circle cx="10" cy="8" r="1.8" /></svg></span><div><b>Location</b><span>Only to read your Wi-Fi network's name. Optional.</span></div><span class="tog on"></span></div>
+					<div class="perm-row"><span class="pi" style="background:#ff3b30"><svg viewBox="0 0 20 20"><path d="M6 8a4 4 0 0 1 8 0c0 4 1.5 5 1.5 5h-11S6 12 6 8Z" /><path d="M8.5 16a1.6 1.6 0 0 0 3 0" /></svg></span><div><b>Notifications</b><span>Only when you turn on a data cap.</span></div><span class="tog on"></span></div>
+					<div class="perm-row"><span class="pi" style="background:#8e8e93"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" /><path d="M3 10h14M10 3c2.2 2.4 2.2 11.6 0 14M10 3c-2.2 2.4-2.2 11.6 0 14" /></svg></span><div><b>Internet access</b><span>None. NetPulse never connects anywhere.</span></div><span class="tog"></span></div>
+					<div class="perm-row"><span class="pi" style="background:#af52de"><svg viewBox="0 0 20 20"><path d="M4 15V9M8 15V5M12 15v-4M16 15V7" /></svg></span><div><b>Analytics &amp; telemetry</b><span>None. No account either.</span></div><span class="tog"></span></div>
+				</div>
 			</div>
 		</section>
 
 		<section id="install">
 			<div class="wrap">
-				<p class="kicker">Install</p>
+				<p class="kicker pill" style="--c:#af52de">Install</p>
 				<h2>Three steps, one of them unusual.</h2>
 				<ol class="steps" data-reveal>
-					<li><b>Download</b><p>Get <a class="link" href={download}>NetPulse-{version}.dmg</a> and drag NetPulse into Applications.</p></li>
-					<li><b>Open it the first time</b><p>This build isn't notarized yet, so macOS will refuse to open it. Right-click NetPulse in Applications and choose <em>Open</em>, or click <em>Open Anyway</em> in System Settings › Privacy &amp; Security.</p></li>
-					<li><b>Find it in the menu bar</b><p>If your menu bar is full, macOS can hide new icons behind the notch. Allow NetPulse in System Settings › Menu Bar or remove an icon or two. Double-clicking NetPulse in Applications also opens its panel.</p></li>
+					<li>
+						<div class="sv sv-dmg" aria-hidden="true"><span class="app"><img src={`${base}favicon.svg`} alt="" width="38" height="38" /></span><span class="arrow">→</span><span class="folder"><svg viewBox="0 0 40 32"><path d="M2 6a3 3 0 0 1 3-3h10l3 4h17a3 3 0 0 1 3 3v17a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3Z" /></svg><small>Applications</small></span></div>
+						<b>Download</b><p>Get <a class="link" href={download}>NetPulse-{version}.dmg</a> and drag NetPulse into Applications.</p>
+					</li>
+					<li>
+						<div class="sv sv-menu" aria-hidden="true"><div class="ctx"><span class="hl">Open</span><span>Show Package Contents</span><span>Get Info</span></div></div>
+						<b>Open it the first time</b><p>The build isn't notarized yet, so right-click NetPulse in Applications and choose <em>Open</em>, or click <em>Open Anyway</em> in System Settings › Privacy &amp; Security.</p>
+					</li>
+					<li>
+						<div class="sv sv-bar" aria-hidden="true"><div class="mbar"><span class="np"><i>↑ 1.2M</i><i>↓ 8.4M</i></span><span class="ico"></span><span class="ico"></span><span class="clock">9:41</span></div></div>
+						<b>Find it in the menu bar</b><p>If the bar is full, macOS can hide new icons behind the notch. Allow NetPulse in System Settings › Menu Bar, or double-click it in Applications to open its panel.</p>
+					</li>
 				</ol>
 				<div class="final">
+					<div class="final-glow" aria-hidden="true"></div>
+					<img class="final-mark" src={`${base}favicon.svg`} alt="" width="56" height="56" />
 					<h2>Know where it all goes.</h2>
+					<p class="sub">Free, open source, and about a megabyte.</p>
 					<div class="cta">
 						<a class="btn btn-primary btn-lg" href={download}>Download for macOS</a>
 						<a class="btn btn-ghost btn-lg" href={`${repo}#readme`}>Build from source</a>
@@ -308,34 +364,122 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	.toast small { align-self: flex-start; margin-left: auto; color: #8e8e93; font-size: 11px; }
 
 	/* facts */
-	.facts-section { padding: 0 0 96px; border-top: 0 !important; }
-	.facts { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
-	.fact { padding: 26px; border-right: 1px solid var(--border); }
-	.fact:last-child { border-right: 0; }
-	.fact b { display: block; font-size: 34px; letter-spacing: -0.03em; font-weight: 650; font-variant-numeric: tabular-nums; }
-	.fact span { font-size: 13px; color: var(--muted); }
+	.facts-section { padding: 8px 0 104px; border-top: 0 !important; }
+	.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+	.fact { position: relative; padding: 24px; border: 1px solid var(--border); border-radius: 18px; background: linear-gradient(160deg, color-mix(in srgb, var(--c) 9%, #fff), #fff 60%); overflow: hidden; opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.25s, border-color 0.25s; }
+	.fact::after { content: ''; position: absolute; right: -40px; top: -40px; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--c) 22%, transparent), transparent 70%); }
+	.fact:hover { border-color: color-mix(in srgb, var(--c) 35%, var(--border)); box-shadow: 0 18px 40px -24px color-mix(in srgb, var(--c) 60%, transparent); transform: translateY(-3px); }
+	.chip { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: color-mix(in srgb, var(--c) 14%, #fff); border: 1px solid color-mix(in srgb, var(--c) 25%, transparent); margin-bottom: 18px; }
+	.chip svg { width: 18px; height: 18px; fill: none; stroke: var(--c); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+	.fact b { display: block; font-size: 38px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 650; font-variant-numeric: tabular-nums; }
+	.fact > span:last-child { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
+	.facts.in .fact { opacity: 1; transform: none; }
+	.facts.in .fact:nth-child(2) { transition-delay: 80ms; }
+	.facts.in .fact:nth-child(3) { transition-delay: 160ms; }
+	.facts.in .fact:nth-child(4) { transition-delay: 240ms; }
+	.facts.in .fact:hover { transform: translateY(-3px); transition-delay: 0ms; }
 
 	/* reveal */
 	[data-reveal]:not(.race):not(.num-inline):not(.net-demo):not(.facts) { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
 	[data-reveal].in { opacity: 1 !important; transform: none !important; }
 
-	.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; margin-top: 40px; }
-	.item { background: #fff; padding: 28px; transition: background 0.2s; }
-	.item:hover { background: #fafafa; }
-	h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
-	.item p { font-size: 14px; color: var(--muted); margin-top: 6px; }
-	.ticks { list-style: none; padding: 0; display: grid; gap: 14px; }
-	.ticks li { position: relative; padding: 14px 16px 14px 44px; color: #3f3f46; font-size: 15px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
-	.ticks li::before { content: ''; position: absolute; left: 17px; top: 18px; width: 12px; height: 7px; border-left: 2px solid var(--up); border-bottom: 2px solid var(--up); transform: rotate(-45deg); }
-	.steps { list-style: none; padding: 0; counter-reset: step; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
-	.steps li { counter-increment: step; border: 1px solid var(--border); border-radius: 18px; padding: 24px; background: #fff; transition: transform 0.2s, box-shadow 0.2s; }
-	.steps li:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -20px rgba(0, 0, 0, 0.2); }
-	.steps li::before { content: counter(step); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--fg); color: #fff; font: 600 13px 'Geist Mono', monospace; margin-bottom: 14px; }
-	.steps p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+	/* section tints and pills */
+	.tint-blue { background: radial-gradient(70% 60% at 0% 0%, rgba(10, 132, 255, 0.07), transparent 60%), linear-gradient(180deg, #f8fbff, #fff); }
+	.tint-green { background: radial-gradient(60% 70% at 100% 50%, rgba(48, 164, 108, 0.09), transparent 60%), linear-gradient(180deg, #fff, #f7fcf9); }
+	.kicker.pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 10px; border-radius: 999px; color: color-mix(in srgb, var(--c) 80%, #000); background: color-mix(in srgb, var(--c) 10%, #fff); border: 1px solid color-mix(in srgb, var(--c) 22%, transparent); text-transform: none; letter-spacing: 0; font-weight: 600; }
+	.kicker.pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 20%, transparent); }
+	h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.015em; }
+
+	/* bento */
+	.bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+	.tile { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 18px 22px 24px; transition: transform 0.25s, box-shadow 0.25s; }
+	.tile:hover { transform: translateY(-3px); box-shadow: 0 24px 50px -30px rgba(10, 60, 120, 0.35); }
+	.tile.wide { grid-column: span 2; }
+	.tile p { font-size: 14px; color: var(--muted); margin-top: 6px; }
+	.viz { position: relative; height: 128px; margin-bottom: 18px; border-radius: 14px; background: linear-gradient(180deg, #f7f9fc, #f1f4f8); border: 1px solid #eef1f5; overflow: hidden; }
+	.viz .tag { position: absolute; left: 12px; top: 10px; font: 500 11px 'Geist Mono', monospace; color: #3f3f46; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--border); padding: 3px 8px; border-radius: 6px; }
+	.viz .tag.warn { color: #b25e00; background: #fff7ec; border-color: #ffe0b3; }
+	.viz-spark svg { position: absolute; inset: 30px 0 0; width: 100%; height: calc(100% - 30px); }
+	.draw { stroke-dasharray: 700; stroke-dashoffset: 700; }
+	.bento.in .draw { animation: draw 2.2s cubic-bezier(0.3, 0.8, 0.3, 1) 0.2s forwards; }
+	.bento.in .d2 { animation-delay: 0.5s; }
+	@keyframes draw { to { stroke-dashoffset: 0; } }
+	.viz-group { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+	.grp { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; background: #fff; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; box-shadow: 0 6px 16px -10px rgba(0, 0, 0, 0.3); }
+	.p-ic.sm { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; color: #fff; font: 700 9px Geist, sans-serif; }
+	.helpers { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; max-width: 92%; }
+	.helpers span { font-size: 10.5px; padding: 2px 7px; border-radius: 6px; background: #fff; border: 1px dashed #c8ccd3; color: #71717a; }
+	.viz-stack { display: flex; flex-direction: column; justify-content: center; padding: 0 16px; gap: 10px; }
+	.stack { display: flex; height: 22px; border-radius: 7px; overflow: hidden; gap: 2px; }
+	.stack i { transform-origin: left; }
+	.bento.in .stack i { animation: grow 0.9s cubic-bezier(0.3, 1, 0.3, 1) both; }
+	.stack i:nth-child(2) { animation-delay: 0.08s !important; } .stack i:nth-child(3) { animation-delay: 0.16s !important; } .stack i:nth-child(4) { animation-delay: 0.24s !important; } .stack i:nth-child(5) { animation-delay: 0.32s !important; } .stack i:nth-child(6) { animation-delay: 0.4s !important; }
+	@keyframes grow { from { transform: scaleX(0); } }
+	.stack .oth { background: repeating-linear-gradient(135deg, #c7c7cc 0 4px, #dcdce0 4px 8px); }
+	.stack-legend { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+	.oth-l { color: #8e8e93; }
+	.viz-days { display: flex; align-items: flex-end; gap: 5px; padding: 40px 16px 14px; }
+	.viz-days i { flex: 1; border-radius: 3px 3px 0 0; background: linear-gradient(180deg, #4aa3ff, #0a84ff); opacity: 0.8; transform-origin: bottom; }
+	.bento.in .viz-days i { animation: rise 0.8s cubic-bezier(0.3, 1.1, 0.4, 1) both; }
+	@keyframes rise { from { transform: scaleY(0); } }
+	.viz-days i.gap { background: repeating-linear-gradient(135deg, rgba(255, 159, 10, 0.25) 0 5px, rgba(255, 159, 10, 0.08) 5px 10px); border: 1px dashed #ffb340; opacity: 1; }
+
+	/* privacy card */
+	.perm { background: rgba(255, 255, 255, 0.9); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 30px 70px -36px rgba(20, 90, 50, 0.45); overflow: hidden; backdrop-filter: blur(8px); }
+	.perm-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; font-size: 13px; font-weight: 600; color: #3f3f46; background: #f6f6f7; border-bottom: 1px solid var(--border); }
+	.lights { display: flex; gap: 6px; }
+	.lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+	.lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+	.perm-row { display: grid; grid-template-columns: 32px 1fr auto; gap: 14px; align-items: center; padding: 14px 16px; border-bottom: 1px solid #f1f1f3; }
+	.perm-row:last-child { border-bottom: 0; }
+	.pi { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; }
+	.pi svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+	.perm-row b { display: block; font-size: 14px; font-weight: 600; }
+	.perm-row span { font-size: 13px; color: var(--muted); }
+	.tog { position: relative; width: 38px; height: 22px; border-radius: 11px; background: #e4e4e7; transition: background 0.3s; }
+	.tog::after { content: ''; position: absolute; left: 2px; top: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); transition: transform 0.35s cubic-bezier(0.3, 1.3, 0.4, 1); }
+	.perm.in .tog.on { background: var(--up); }
+	.perm.in .tog.on::after { transform: translateX(16px); }
+
+	/* install */
+	.steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+	.steps li { border: 1px solid var(--border); border-radius: 20px; padding: 18px 22px 24px; background: #fff; transition: transform 0.25s, box-shadow 0.25s; }
+	.steps li:hover { transform: translateY(-3px); box-shadow: 0 24px 50px -30px rgba(80, 40, 120, 0.35); }
+	.steps b { font-size: 17px; font-weight: 600; letter-spacing: -0.015em; }
+	.steps p { font-size: 14px; color: var(--muted); margin-top: 6px; }
+	.sv { height: 120px; margin-bottom: 18px; border-radius: 14px; background: linear-gradient(180deg, #faf7fd, #f4f0f9); border: 1px solid #f0eaf6; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+	.sv-dmg { gap: 18px; }
+	.sv-dmg .app img { border-radius: 10px; box-shadow: 0 8px 18px -8px rgba(0, 0, 0, 0.5); }
+	.steps li:hover .sv-dmg .app { animation: nudge 0.9s ease; }
+	@keyframes nudge { 50% { transform: translateX(14px); } }
+	.sv-dmg .arrow { color: #a78bca; font-size: 20px; }
+	.folder { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+	.folder svg { width: 46px; height: 36px; fill: #7ab8f5; }
+	.folder small { font-size: 10px; color: var(--muted); }
+	.ctx { display: flex; flex-direction: column; min-width: 170px; padding: 5px; border-radius: 9px; background: rgba(255, 255, 255, 0.95); border: 0.5px solid rgba(0, 0, 0, 0.15); box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.35); font-size: 12.5px; }
+	.ctx span { padding: 3px 10px; border-radius: 5px; color: #27272a; }
+	.ctx .hl { background: #0a84ff; color: #fff; }
+	.mbar { display: flex; align-items: center; gap: 12px; height: 28px; padding: 0 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 8px 20px -12px rgba(0, 0, 0, 0.35); font-size: 12px; }
+	.mbar .np { display: flex; flex-direction: column; font: 600 8.5px/1.05 'Geist Mono', monospace; padding: 2px 5px; border-radius: 4px; background: rgba(10, 132, 255, 0.12); color: #0a3d7a; }
+	.mbar .np i { font-style: normal; }
+	.steps li:hover .mbar .np { box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.4); }
+	.mbar .ico { width: 14px; height: 14px; border-radius: 4px; background: #d4d4d8; }
+	.mbar .clock { font-weight: 500; color: #3f3f46; }
 	.link { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #a1a1aa; }
 	.link:hover { text-decoration-color: currentColor; }
-	.final { margin-top: 88px; padding: 64px 24px; text-align: center; border-radius: 24px; background: radial-gradient(60% 80% at 30% 0%, rgba(10, 132, 255, 0.1), transparent 70%), radial-gradient(50% 70% at 80% 100%, rgba(48, 164, 108, 0.1), transparent 70%), #fafafa; border: 1px solid var(--border); }
-	.final h2 { margin: 0 auto; }
+
+	/* final call to action */
+	.final { position: relative; margin-top: 96px; padding: 72px 24px; text-align: center; border-radius: 28px; overflow: hidden; background: #0b0b0f; color: #fff; }
+	.final-glow { position: absolute; inset: -40%; background: conic-gradient(from 0deg, rgba(10, 132, 255, 0.35), rgba(48, 164, 108, 0.3), rgba(175, 82, 222, 0.3), rgba(10, 132, 255, 0.35)); filter: blur(70px); animation: spin 18s linear infinite; }
+	@keyframes spin { to { transform: rotate(1turn); } }
+	.final > *:not(.final-glow) { position: relative; }
+	.final-mark { margin: 0 auto 18px; border-radius: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+	.final h2 { margin: 0 auto 8px; color: #fff; }
+	.final .sub { color: #a1a1aa; margin: 0 auto; }
+	.final .btn-primary { background: #fff; color: #09090b; border-color: #fff; }
+	.final .btn-primary:hover { background: #e4e4e7; }
+	.final .btn-ghost { color: #fff; border-color: rgba(255, 255, 255, 0.25); }
+	.final .btn-ghost:hover { background: rgba(255, 255, 255, 0.08); }
 
 	footer { border-top: 1px solid var(--border); padding: 28px 0; font-size: 13px; color: var(--muted); }
 	footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -343,10 +487,10 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	@media (max-width: 900px) {
 		nav .links { display: none; }
 		nav .wrap { justify-content: space-between; }
-		.split, .split.rev, .grid, .steps, .facts { grid-template-columns: 1fr; }
+		.split, .split.rev, .steps, .bento { grid-template-columns: 1fr; }
+		.facts { grid-template-columns: 1fr 1fr; }
+		.tile.wide { grid-column: auto; }
 		.split { gap: 40px; }
-		.fact { border-right: 0; border-bottom: 1px solid var(--border); }
-		.fact:last-child { border-bottom: 0; }
 		.zoom { height: 320vh; }
 		.caps { left: 20px; right: 20px; width: auto; top: auto; bottom: 24px; transform: none; height: 150px; }
 		.cap { top: auto; bottom: 0; transform: translateY(14px); padding: 16px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.82); backdrop-filter: blur(14px); border: 1px solid rgba(0, 0, 0, 0.06); }
@@ -361,7 +505,7 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	@media (prefers-reduced-motion: reduce) {
 		.zoom { height: auto; }
 		.sticky { position: relative; height: 70vh; }
-		.glow, .shimmer, .scroll-hint i::after { animation: none; }
+		.glow, .shimmer, .scroll-hint i::after, .final-glow { animation: none; }
 		.cap { display: none; }
 	}
 </style>
