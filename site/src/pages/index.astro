@@ -1,14 +1,30 @@
 ---
-import '../styles/global.css';
+import Base from '../layouts/Base.astro';
 import Panel from '../components/Panel.astro';
+import { base, coffee, download, issues, repo, version } from '../config';
 
-const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const img = (name: string) => `${base}img/${name}`;
-const repo = 'https://github.com/venkataPhanindraVutla/NetPulse';
-const version = '0.1.0';
-const download = `${repo}/releases/download/v${version}/NetPulse-${version}.dmg`;
+const title = 'NetPulse: network speed and data usage by app in your Mac menu bar';
 const description = 'NetPulse is a free, open-source macOS menu bar app that shows live network speed and breaks your data usage down by app and by network. Everything stays on your Mac.';
-
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareApplication',
+	name: 'NetPulse',
+	description,
+	url: new URL(base, Astro.site).href,
+	image: new URL(`${base}og.png`, Astro.site).href,
+	screenshot: new URL(img('hero.jpg'), Astro.site).href,
+	applicationCategory: 'UtilitiesApplication',
+	operatingSystem: 'macOS 14 or later (Apple Silicon)',
+	softwareVersion: version,
+	fileSize: '1MB',
+	downloadUrl: download,
+	license: 'https://opensource.org/licenses/MIT',
+	isAccessibleForFree: true,
+	offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+	author: { '@type': 'Organization', name: 'NetPulse contributors', url: repo },
+	codeRepository: repo,
+};
 const race = [
 	{ name: 'Safari', color: '#1e90ff', gb: 1.84, down: 93 },
 	{ name: 'Zoom', color: '#2d8cff', gb: 0.62, down: 50 },
@@ -21,37 +37,8 @@ const peak = Math.max(...race.map((r) => r.gb));
 const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="generator" content={Astro.generator} />
-		<title>NetPulse — network speed and data usage for your Mac's menu bar</title>
-		<meta name="description" content={description} />
-		<link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-		<meta property="og:title" content="NetPulse" />
-		<meta property="og:description" content={description} />
-		<meta property="og:image" content={new URL(img('hero.jpg'), Astro.site).href} />
-		<meta property="og:type" content="website" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet" />
-		<link rel="preload" as="image" href={img('hero.jpg')} />
-	</head>
-	<body>
-		<nav>
-			<div class="wrap">
-				<a class="brand" href={base} aria-label="NetPulse home"><img src={`${base}favicon.svg`} alt="" width="24" height="24" />NetPulse</a>
-				<div class="links">
-					<a href="#apps">Apps</a>
-					<a href="#networks">Networks</a>
-					<a href="#measuring">How it measures</a>
-					<a href="#privacy">Privacy</a>
-					<a href={repo}>GitHub</a>
-				</div>
-				<a class="btn btn-primary btn-sm" href={download}>Download</a>
-			</div>
-		</nav>
+<Base title={title} description={description} jsonLd={jsonLd} photoCredit>
+	<link slot="head" rel="preload" as="image" href={img('hero.jpg')} />
 
 		<header class="hero">
 			<div class="glow" aria-hidden="true"></div>
@@ -66,7 +53,7 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 					</a>
 					<a class="btn btn-ghost btn-lg" href={repo}>View on GitHub</a>
 				</div>
-				<p class="meta">macOS 14 or later · 1 MB · Apple Silicon and Intel</p>
+				<p class="meta">macOS 14 or later · Apple Silicon · 1 MB</p>
 			</div>
 		</header>
 
@@ -213,7 +200,7 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 					<p class="kicker pill" style="--c:#30a46c">Privacy</p>
 					<h2>Local by design.</h2>
 					<p class="sub">No account, no telemetry, and NetPulse makes no network connections of its own. Your history is a small SQLite file in <code>~/Library/Application Support/NetPulse</code> that you can delete any time.</p>
-					<a class="btn btn-ghost" href={repo} style="margin-top:24px">Read every line on GitHub →</a>
+					<div class="cta left"><a class="btn btn-ghost" href={repo}>Read every line on GitHub →</a><a class="btn btn-ghost" href={`${base}privacy/`}>Privacy policy</a></div>
 				</div>
 				<div class="perm" data-reveal>
 					<div class="perm-head"><span class="lights"><i></i><i></i><i></i></span>What NetPulse can access</div>
@@ -256,25 +243,36 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 			</div>
 		</section>
 
-		<footer>
+
+		<section id="support" class="support">
 			<div class="wrap">
-				<span>NetPulse · MIT licensed · <a class="link" href={repo}>GitHub</a></span>
-				<span>Hero photo by <a class="link" href="https://unsplash.com/photos/macbook-on-top-white-table-v_1t1DzfAUA">Rubén Menárguez</a> on Unsplash</span>
+				<div class="coffee" data-reveal>
+					<div class="mug" aria-hidden="true">
+						<svg viewBox="0 0 120 120">
+							<path class="steam" d="M46 34c-6-7 6-11 0-19" /><path class="steam s2" d="M60 36c-6-7 6-11 0-19" /><path class="steam s3" d="M74 34c-6-7 6-11 0-19" />
+							<path class="mug-body" d="M28 48h62v24c0 15-12 27-27 27h-8c-15 0-27-12-27-27V48Z" />
+							<path class="mug-handle" d="M90 56h6a11 11 0 0 1 0 22h-7" />
+							<path class="mug-band" d="M28 60h62" />
+						</svg>
+					</div>
+					<div>
+						<p class="kicker pill" style="--c:#d97706">Support</p>
+						<h2>Free to use. Coffee keeps it going.</h2>
+						<p class="sub">NetPulse has no ads, no subscription and no tracking. If it caught a runaway download before your hotspot cap did, you can buy me a coffee. It helps pay for an Apple Developer account, so future builds can be notarized and open without the right-click step.</p>
+						<div class="coffee-cta">
+							<a class="btn btn-coffee btn-lg" href={coffee}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V9Z" /><path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16" /></svg>Buy me a coffee</a>
+							<span class="coffee-alt">or <a class="link" href={repo}>star it on GitHub</a> · <a class="link" href={issues}>report a bug</a></span>
+						</div>
+						<p class="fine">Payments are handled by Buy Me a Coffee. A coffee doesn't unlock anything: every feature stays free for everyone.</p>
+					</div>
+				</div>
 			</div>
-		</footer>
+		</section>
 
 		<script src="../scripts/site.ts"></script>
-	</body>
-</html>
+</Base>
 
 <style>
-	nav { position: sticky; top: 0; z-index: 30; background: rgba(255, 255, 255, 0.72); backdrop-filter: saturate(1.6) blur(14px); border-bottom: 1px solid rgba(228, 228, 231, 0.7); }
-	nav .wrap { display: flex; align-items: center; height: 60px; gap: 28px; }
-	.brand { display: flex; align-items: center; gap: 9px; font-weight: 600; letter-spacing: -0.01em; }
-	.brand img { border-radius: 7px; }
-	nav .links { display: flex; gap: 22px; margin-left: auto; font-size: 14px; color: var(--muted); }
-	nav .links a { transition: color 0.15s; }
-	nav .links a:hover { color: var(--fg); }
 
 	.hero { position: relative; padding: 84px 0 56px; text-align: center; overflow: hidden; }
 	.glow { position: absolute; inset: -20% -10% auto; height: 620px; background: radial-gradient(40% 50% at 30% 40%, rgba(10, 132, 255, 0.14), transparent 70%), radial-gradient(35% 45% at 72% 30%, rgba(48, 164, 108, 0.13), transparent 70%), radial-gradient(30% 40% at 50% 80%, rgba(175, 82, 222, 0.08), transparent 70%); filter: blur(10px); animation: drift 14s ease-in-out infinite alternate; pointer-events: none; }
@@ -292,6 +290,7 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	.btn-primary { box-shadow: 0 6px 20px rgba(9, 9, 11, 0.18); }
 	.btn-primary:hover { transform: translateY(-1px); }
 	.btn { transition: background 0.15s, transform 0.15s, border-color 0.15s; }
+	.cta.left { justify-content: flex-start; margin-top: 24px; }
 	.meta { margin-top: 14px; font-size: 13px; color: var(--muted); }
 
 	/* scroll zoom */
@@ -299,7 +298,7 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	.sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #eceef0; }
 	.scene { position: absolute; left: 0; top: 0; width: 3200px; height: 1906px; transform-origin: 0 0; will-change: transform; }
 	.photo { width: 3200px; height: 1906px; }
-	.mb-label { position: absolute; left: 1872px; top: 409px; height: 22px; padding: 0 6px; display: flex; flex-direction: column; justify-content: center; font: 600 9px/1.05 'Geist Mono', monospace; color: #111; background: rgba(0, 0, 0, 0.09); border-radius: 4px; font-variant-numeric: tabular-nums; }
+	.mb-label { position: absolute; left: 1872px; top: 409px; height: 22px; padding: 0 6px; display: flex; flex-direction: column; justify-content: center; font: 600 9px/1.05 var(--font-mono); color: #111; background: rgba(0, 0, 0, 0.09); border-radius: 4px; font-variant-numeric: tabular-nums; }
 	.panel-anchor { position: absolute; left: 1715px; top: 446px; transform: scale(0.96); transform-origin: 0 0; }
 	.caps { position: absolute; left: max(24px, calc((100vw - 1120px) / 2)); top: 50%; transform: translateY(-50%); width: min(30vw, 380px); pointer-events: none; }
 	.cap { position: absolute; top: 0; transform: translateY(-50%) translateY(14px); opacity: 0; transition: opacity 0.45s ease, transform 0.45s ease; }
@@ -337,7 +336,7 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	.net-section { background: linear-gradient(180deg, #fafafa, #fff); }
 	.net-demo { position: relative; }
 	.net-seg { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); padding: 4px; background: #f1f1f3; border: 1px solid var(--border); border-radius: 12px; }
-	.net-seg button { position: relative; z-index: 1; font: 500 14px Geist, sans-serif; padding: 9px 4px; border: 0; background: none; color: #52525b; cursor: pointer; border-radius: 8px; transition: color 0.2s; }
+	.net-seg button { position: relative; z-index: 1; font: 500 14px var(--font-sans); padding: 9px 4px; border: 0; background: none; color: #52525b; cursor: pointer; border-radius: 8px; transition: color 0.2s; }
 	.net-seg button[aria-selected='true'] { color: var(--fg); }
 	.net-thumb { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.04); transition: transform 0.4s cubic-bezier(0.3, 1.2, 0.4, 1); }
 	.net-card { margin-top: 14px; padding: 24px; border: 1px solid var(--border); border-radius: 18px; background: #fff; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.2); }
@@ -351,7 +350,7 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	.net-bar i { display: block; height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(0.25, 1, 0.3, 1), background 0.4s; }
 	.net-apps { position: relative; }
 	.net-apps :global(.net-row) { position: absolute; left: 0; right: 0; top: 0; height: 46px; display: grid; grid-template-columns: 26px 140px 1fr 70px; gap: 12px; align-items: center; transition: transform 0.6s cubic-bezier(0.3, 1.1, 0.4, 1); font-size: 14px; }
-	.net-apps :global(.p-ic) { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; color: #fff; font: 700 10.5px Geist, sans-serif; }
+	.net-apps :global(.p-ic) { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; color: #fff; font: 700 10.5px var(--font-sans); }
 	.net-apps :global(.track) { height: 6px; border-radius: 3px; background: #f1f1f3; overflow: hidden; }
 	.net-apps :global(.track i) { display: block; height: 100%; border-radius: 3px; background: var(--down); transition: width 0.7s cubic-bezier(0.25, 1, 0.3, 1); }
 	.net-apps :global(.val) { text-align: right; font-variant-numeric: tabular-nums; color: #3f3f46; font-weight: 500; }
@@ -397,7 +396,7 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	.tile.wide { grid-column: span 2; }
 	.tile p { font-size: 14px; color: var(--muted); margin-top: 6px; }
 	.viz { position: relative; height: 128px; margin-bottom: 18px; border-radius: 14px; background: linear-gradient(180deg, #f7f9fc, #f1f4f8); border: 1px solid #eef1f5; overflow: hidden; }
-	.viz .tag { position: absolute; left: 12px; top: 10px; font: 500 11px 'Geist Mono', monospace; color: #3f3f46; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--border); padding: 3px 8px; border-radius: 6px; }
+	.viz .tag { position: absolute; left: 12px; top: 10px; font: 500 11px var(--font-mono); color: #3f3f46; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--border); padding: 3px 8px; border-radius: 6px; }
 	.viz .tag.warn { color: #b25e00; background: #fff7ec; border-color: #ffe0b3; }
 	.viz-spark svg { position: absolute; inset: 30px 0 0; width: 100%; height: calc(100% - 30px); }
 	.draw { stroke-dasharray: 700; stroke-dashoffset: 700; }
@@ -406,7 +405,7 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	@keyframes draw { to { stroke-dashoffset: 0; } }
 	.viz-group { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
 	.grp { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; background: #fff; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; box-shadow: 0 6px 16px -10px rgba(0, 0, 0, 0.3); }
-	.p-ic.sm { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; color: #fff; font: 700 9px Geist, sans-serif; }
+	.p-ic.sm { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; color: #fff; font: 700 9px var(--font-sans); }
 	.helpers { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; max-width: 92%; }
 	.helpers span { font-size: 10.5px; padding: 2px 7px; border-radius: 6px; background: #fff; border: 1px dashed #c8ccd3; color: #71717a; }
 	.viz-stack { display: flex; flex-direction: column; justify-content: center; padding: 0 16px; gap: 10px; }
@@ -460,13 +459,11 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	.ctx span { padding: 3px 10px; border-radius: 5px; color: #27272a; }
 	.ctx .hl { background: #0a84ff; color: #fff; }
 	.mbar { display: flex; align-items: center; gap: 12px; height: 28px; padding: 0 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 8px 20px -12px rgba(0, 0, 0, 0.35); font-size: 12px; }
-	.mbar .np { display: flex; flex-direction: column; font: 600 8.5px/1.05 'Geist Mono', monospace; padding: 2px 5px; border-radius: 4px; background: rgba(10, 132, 255, 0.12); color: #0a3d7a; }
+	.mbar .np { display: flex; flex-direction: column; font: 600 8.5px/1.05 var(--font-mono); padding: 2px 5px; border-radius: 4px; background: rgba(10, 132, 255, 0.12); color: #0a3d7a; }
 	.mbar .np i { font-style: normal; }
 	.steps li:hover .mbar .np { box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.4); }
 	.mbar .ico { width: 14px; height: 14px; border-radius: 4px; background: #d4d4d8; }
 	.mbar .clock { font-weight: 500; color: #3f3f46; }
-	.link { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #a1a1aa; }
-	.link:hover { text-decoration-color: currentColor; }
 
 	/* final call to action */
 	.final { position: relative; margin-top: 96px; padding: 72px 24px; text-align: center; border-radius: 28px; overflow: hidden; background: #0b0b0f; color: #fff; }
@@ -481,12 +478,29 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 	.final .btn-ghost { color: #fff; border-color: rgba(255, 255, 255, 0.25); }
 	.final .btn-ghost:hover { background: rgba(255, 255, 255, 0.08); }
 
-	footer { border-top: 1px solid var(--border); padding: 28px 0; font-size: 13px; color: var(--muted); }
-	footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+	/* support */
+	.support { padding-top: 24px; border-top: 0 !important; }
+	.coffee { display: grid; grid-template-columns: 180px 1fr; gap: 48px; align-items: center; padding: 48px 56px; border: 1px solid #f3e3bf; border-radius: 28px; background: radial-gradient(60% 90% at 0% 50%, rgba(255, 221, 0, 0.22), transparent 70%), linear-gradient(135deg, #fffaf0, #fff 65%); }
+	.coffee h2 { margin-top: 14px; }
+	.mug { display: grid; place-items: center; width: 180px; height: 180px; border-radius: 40px; background: #fff; border: 1px solid #f3e3bf; box-shadow: 0 30px 60px -30px rgba(160, 100, 0, 0.45); }
+	.mug svg { width: 120px; height: 120px; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+	.mug-body { fill: #ffdd00; stroke: #09090b; stroke-width: 3; }
+	.mug-handle { stroke: #09090b; stroke-width: 3; }
+	.mug-band { stroke: #09090b; stroke-width: 3; opacity: 0.15; }
+	.steam { stroke: #c8a96a; stroke-width: 3; opacity: 0; }
+	.coffee.in .steam { animation: steam 3s ease-in-out infinite; }
+	.coffee.in .s2 { animation-delay: 0.6s; }
+	.coffee.in .s3 { animation-delay: 1.2s; }
+	@keyframes steam { 0% { opacity: 0; transform: translateY(6px); } 40% { opacity: 0.9; } 100% { opacity: 0; transform: translateY(-8px); } }
+	.coffee-cta { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 26px; }
+	.btn-coffee { background: #ffdd00; color: #09090b; border-color: #e6c700; font-weight: 600; box-shadow: 0 8px 22px -8px rgba(200, 150, 0, 0.7); }
+	.btn-coffee:hover { background: #ffe433; transform: translateY(-1px); }
+	.btn-coffee svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+	.coffee-alt { font-size: 14px; color: var(--muted); }
+	.fine { margin-top: 18px; font-size: 12.5px; color: #8e8e93; }
 
 	@media (max-width: 900px) {
-		nav .links { display: none; }
-		nav .wrap { justify-content: space-between; }
 		.split, .split.rev, .steps, .bento { grid-template-columns: 1fr; }
 		.facts { grid-template-columns: 1fr 1fr; }
 		.tile.wide { grid-column: auto; }
@@ -501,11 +515,15 @@ const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0
 		.net-apps :global(.track) { display: none; }
 		.toast { right: 0; left: 0; width: auto; top: -72px; }
 		section { padding: 72px 0; }
+		.coffee { grid-template-columns: 1fr; gap: 28px; padding: 32px 24px; }
+		.mug { width: 120px; height: 120px; border-radius: 28px; }
+		.mug svg { width: 84px; height: 84px; }
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.zoom { height: auto; }
 		.sticky { position: relative; height: 70vh; }
-		.glow, .shimmer, .scroll-hint i::after, .final-glow { animation: none; }
+		.glow, .shimmer, .scroll-hint i::after, .final-glow, .coffee.in .steam { animation: none; }
+		.steam { opacity: 0.6; }
 		.cap { display: none; }
 	}
 </style>

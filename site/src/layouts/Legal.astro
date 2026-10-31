@@ -1,0 +1,29 @@
+---
+// Layout for the Markdown legal pages (privacy, terms).
+import Base from './Base.astro';
+
+const { frontmatter } = Astro.props;
+---
+
+<Base title={`${frontmatter.title} · NetPulse`} description={frontmatter.description} path={frontmatter.path}>
+	<article class="legal wrap">
+		<p class="kicker">Last updated {frontmatter.updated}</p>
+		<h1>{frontmatter.title}</h1>
+		<p class="lead">{frontmatter.description}</p>
+		<slot />
+	</article>
+</Base>
+
+<style>
+	.legal { max-width: 760px; padding-top: 72px; padding-bottom: 96px; }
+	.legal h1 { font-size: clamp(36px, 5vw, 52px); line-height: 1.05; letter-spacing: -0.04em; font-weight: 650; margin: 12px 0 16px; }
+	.lead { font-size: 19px; color: var(--muted); margin-bottom: 40px; }
+	.legal :global(h2) { font-size: 22px; letter-spacing: -0.02em; margin: 44px 0 12px; max-width: none; }
+	.legal :global(p), .legal :global(li) { color: #3f3f46; }
+	.legal :global(p + p) { margin-top: 12px; }
+	.legal :global(ul) { margin: 12px 0; padding-left: 22px; }
+	.legal :global(li + li) { margin-top: 8px; }
+	.legal :global(a) { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #a1a1aa; }
+	.legal :global(a:hover) { text-decoration-color: currentColor; }
+	.legal :global(strong) { color: var(--fg); font-weight: 600; }
+</style>

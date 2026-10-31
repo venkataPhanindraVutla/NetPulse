@@ -52,7 +52,7 @@ const { id } = Astro.props;
 
 		<div class="p-view" data-view="apps" hidden>
 			<div class="p-sec">
-				<div class="p-seg p-seg-small" aria-hidden="true"><button aria-selected="true">Today</button><button>Week</button><button>Month</button></div>
+				<div class="p-seg p-seg-small" aria-hidden="true"><button tabindex="-1" aria-selected="true">Today</button><button tabindex="-1">Week</button><button tabindex="-1">Month</button></div>
 				<div class="p-h p-row-gap"><span class="p-strong" data-bind="appsTotal">3.97 GB total</span><span class="p-pill">All networks ▾</span></div>
 				<div class="p-apps" data-bind="apps"></div>
 			</div>
@@ -84,7 +84,7 @@ const { id } = Astro.props;
 </div>
 
 <style is:global>
-	.panel { --pf: #1d1d1f; --pm: #6e6e73; width: 320px; background: rgba(246, 246, 247, 0.96); border-radius: 13px; border: 0.5px solid rgba(0, 0, 0, 0.16); box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.1); color: var(--pf); font: 13px/1.35 -apple-system, BlinkMacSystemFont, 'SF Pro Text', Geist, sans-serif; overflow: hidden; text-align: left; backdrop-filter: blur(20px); user-select: none; }
+	.panel { --pf: #1d1d1f; --pm: #6e6e73; width: 320px; background: rgba(246, 246, 247, 0.96); border-radius: 13px; border: 0.5px solid rgba(0, 0, 0, 0.16); box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.1); color: var(--pf); font: 13px/1.35 -apple-system, BlinkMacSystemFont, 'SF Pro Text', var(--font-sans); overflow: hidden; text-align: left; backdrop-filter: blur(20px); user-select: none; }
 	.panel button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 	.p-seg { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); margin: 11px 13px 9px; padding: 2px; background: #e3e3e6; border-radius: 8px; }
 	.p-seg button { position: relative; z-index: 1; padding: 4px 0; font-size: 12.5px; color: #3a3a3c; border-radius: 6px; transition: color 0.2s; }
@@ -119,7 +119,7 @@ const { id } = Astro.props;
 	.p-small { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--pm); font-variant-numeric: tabular-nums; }
 	.p-top .row, .p-apps .row { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-variant-numeric: tabular-nums; }
 	.p-apps .row { padding: 4px 0; }
-	.p-ic { flex: none; width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; color: #fff; font: 700 9.5px/1 Geist, sans-serif; }
+	.p-ic { flex: none; width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; color: #fff; font: 700 9.5px/1 var(--font-sans); }
 	.row .n { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 	.row .v { font-size: 11.5px; color: #3a3a3c; white-space: nowrap; }
 	.row .bars { display: flex; height: 3px; border-radius: 2px; overflow: hidden; margin-top: 3px; transition: width 0.7s cubic-bezier(0.3, 1, 0.3, 1); }

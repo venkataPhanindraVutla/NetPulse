@@ -11,10 +11,10 @@
 
 * { box-sizing: border-box; margin: 0; }
 html { scroll-behavior: smooth; scroll-padding-top: 76px; }
-body { background: var(--bg); color: var(--fg); font: 16px/1.55 Geist, system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+body { background: var(--bg); color: var(--fg); font: 16px/1.55 var(--font-sans); -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
-code { font: 500 0.88em 'Geist Mono', ui-monospace, monospace; background: var(--soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; }
+code { font: 500 0.88em var(--font-mono); background: var(--soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
 .btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); transition: background 0.15s, border-color 0.15s; }
@@ -29,5 +29,8 @@ section + section { border-top: 1px solid var(--border); }
 .kicker { font-size: 13px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 h2 { font-size: clamp(28px, 3.6vw, 40px); letter-spacing: -0.025em; line-height: 1.12; font-weight: 600; margin: 10px 0 14px; max-width: 22ch; }
 .sub { color: var(--muted); max-width: 56ch; }
+
+.link { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #a1a1aa; }
+.link:hover { text-decoration-color: currentColor; }
 
 :focus-visible { outline: 2px solid var(--down); outline-offset: 2px; border-radius: 6px; }

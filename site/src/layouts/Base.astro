@@ -1,0 +1,108 @@
+---
+// Page shell for every page: metadata, self-hosted fonts, navigation and footer.
+import '../styles/global.css';
+import { Font } from 'astro:assets';
+import { base, coffee, download, repo } from '../config';
+
+interface Props {
+	title: string;
+	description: string;
+	/** Path below the site base, e.g. "privacy/". Empty for the home page. */
+	path?: string;
+	jsonLd?: Record<string, unknown>;
+	/** Show the Unsplash credit for the hero photo. */
+	photoCredit?: boolean;
+}
+const { title, description, path = '', jsonLd, photoCredit = false } = Astro.props;
+const canonical = new URL(`${base}${path}`, Astro.site).href;
+const ogImage = new URL(`${base}og.png`, Astro.site).href;
+const ogAlt = 'NetPulse: see where your bandwidth goes. The Now and Apps tabs of the menu bar panel.';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<meta name="robots" content="index, follow" />
+		<meta name="author" content="NetPulse contributors" />
+		<meta name="keywords" content="NetPulse, macOS network monitor, menu bar network speed, bandwidth monitor Mac, data usage by app, per-app network usage, hotspot data cap, open source Mac app" />
+		<meta name="theme-color" content="#ffffff" />
+		<meta name="color-scheme" content="light" />
+
+		<link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+		<link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+		<link rel="sitemap" href={`${base}sitemap-index.xml`} />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="NetPulse" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={ogAlt} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
+		<meta name="twitter:image:alt" content={ogAlt} />
+
+		<Font cssVariable="--font-sans" preload />
+		<Font cssVariable="--font-mono" />
+		{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+		<slot name="head" />
+	</head>
+	<body>
+		<a class="skip" href="#main">Skip to content</a>
+		<nav aria-label="Main">
+			<div class="wrap">
+				<a class="brand" href={base} aria-label="NetPulse home"><img src={`${base}favicon.svg`} alt="" width="24" height="24" />NetPulse</a>
+				<div class="links">
+					<a href={`${base}#apps`}>Apps</a>
+					<a href={`${base}#networks`}>Networks</a>
+					<a href={`${base}#measuring`}>How it measures</a>
+					<a href={`${base}#privacy`}>Privacy</a>
+					<a href={`${base}#support`}>Support</a>
+					<a href={repo}>GitHub</a>
+				</div>
+				<a class="btn btn-primary btn-sm" href={download}>Download</a>
+			</div>
+		</nav>
+
+		<main id="main">
+			<slot />
+		</main>
+
+		<footer>
+			<div class="wrap">
+				<span>NetPulse · MIT licensed · <a class="link" href={repo}>GitHub</a> · <a class="link" href={`${base}privacy/`}>Privacy</a> · <a class="link" href={`${base}terms/`}>Terms</a> · <a class="link" href={coffee}>Buy me a coffee</a></span>
+				{photoCredit && <span>Hero photo by <a class="link" href="https://unsplash.com/photos/macbook-on-top-white-table-v_1t1DzfAUA">Rubén Menárguez</a> on Unsplash</span>}
+			</div>
+		</footer>
+	</body>
+</html>
+
+<style>
+	.skip { position: absolute; left: 12px; top: -48px; z-index: 40; padding: 8px 12px; border-radius: 8px; background: var(--fg); color: #fff; font-size: 14px; }
+	.skip:focus { top: 12px; }
+	nav { position: sticky; top: 0; z-index: 30; background: rgba(255, 255, 255, 0.72); backdrop-filter: saturate(1.6) blur(14px); border-bottom: 1px solid rgba(228, 228, 231, 0.7); }
+	nav .wrap { display: flex; align-items: center; height: 60px; gap: 28px; }
+	.brand { display: flex; align-items: center; gap: 9px; font-weight: 600; letter-spacing: -0.01em; }
+	.brand img { border-radius: 7px; }
+	nav .links { display: flex; gap: 22px; margin-left: auto; font-size: 14px; color: var(--muted); }
+	nav .links a { transition: color 0.15s; }
+	nav .links a:hover { color: var(--fg); }
+	footer { border-top: 1px solid var(--border); padding: 28px 0; font-size: 13px; color: var(--muted); }
+	footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+	@media (max-width: 900px) {
+		nav .links { display: none; }
+		nav .wrap { justify-content: space-between; }
+	}
+</style>

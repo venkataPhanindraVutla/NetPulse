@@ -19,12 +19,18 @@ NetPulse is a native macOS menu bar app that shows live network speed and how mu
 
 All screenshots are rendered with sample data by the app's debug harness, not captured from a real session. The last image shows the paused icon and two stacked label renders.
 
-## Requirements
+## Install
+
+1. Download `NetPulse-0.1.0.dmg` from the [latest release](https://github.com/venkataPhanindraVutla/NetPulse/releases/latest) and drag NetPulse into Applications.
+2. The build is signed ad hoc and not notarized yet, so the first time, right-click NetPulse in Applications and choose **Open** (or click **Open Anyway** in System Settings › Privacy & Security).
+3. Look for it in the menu bar. It has no Dock icon.
+
+The release build needs macOS 14 or later on Apple Silicon. On an Intel Mac, build it from source.
+
+## Requirements for building
 
 - macOS 14 or later (developed on macOS 26.6, Apple Silicon).
 - Xcode (developed with 27.1; Swift 6 language mode) and [xcodegen](https://github.com/yonaskolb/XcodeGen).
-
-NetPulse is not distributed as a binary yet. You build it yourself.
 
 ## Build
 
@@ -106,6 +112,8 @@ NetPulse makes no network calls and has no update checker. Everything is stored 
 
 To delete your history, quit NetPulse and remove that file (or the `NetPulse` folder). Settings live in the app's defaults; `defaults delete io.github.netpulse.NetPulse` resets them.
 
+The full [privacy policy](https://venkataphanindravutla.github.io/NetPulse/privacy/) and [terms of use](https://venkataphanindravutla.github.io/NetPulse/terms/) are on the website.
+
 ## Known limits
 
 - **Not on the Mac App Store and not sandboxed.** Per-app attribution needs `/usr/bin/nettop`, which the App Sandbox does not allow. The hardened runtime is on in every build, ad hoc included.
@@ -116,6 +124,10 @@ To delete your history, quit NetPulse and remove that file (or the `NetPulse` fo
 - **Caps cover network totals only**, not individual apps.
 - **Menu bar visibility on macOS 26**: see "If you cannot see the menu bar item" above.
 - Decimal units (1 GB = 1,000,000,000 bytes). Rates can be shown as MB/s or Mbps in Settings.
+
+## Support
+
+NetPulse is free and stays free. If it saved you from a surprise data bill, you can [buy me a coffee](https://buymeacoffee.com/venkat__). It helps pay for an Apple Developer account so future builds can be notarized. Stars, bug reports and pull requests help too.
 
 ## License
 
