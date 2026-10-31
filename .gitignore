@@ -5,3 +5,4 @@ DerivedData/
 .superpowers/
 Config/Local.xcconfig
 .DS_Store
+dist/
