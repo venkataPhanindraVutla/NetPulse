@@ -74,7 +74,7 @@ enum CapAlertProbe {
         let second = CapEvaluator.evaluate(first.updated, used: 64_300_000_000, periodStart: interval.start)
         log.info("test-cap-alert: first=\(first.alert?.threshold ?? -1) second=\(second.alert?.threshold ?? -1)")
         if let alert = first.alert {
-            await model.notifications.post(alert, networkName: "Test Network", resets: interval.end)
+            _ = await model.notifications.post(alert, networkName: "Test Network", resets: interval.end)
             log.info("test-cap-alert: posted 80% for 'Test Network' resets \(interval.end, privacy: .public)")
         }
     }

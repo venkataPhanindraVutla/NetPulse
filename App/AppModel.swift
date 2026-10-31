@@ -352,10 +352,17 @@ final class AppModel {
                 let used = try await store.totals(network: cap.networkID, in: interval).total
                 let result = CapEvaluator.evaluate(cap, used: used, periodStart: interval.start)
                 guard let alert = result.alert else { continue }
+                // The cap may have been edited while totals were loading; its alert state was reset then.
+                let current = try await store.caps().first { $0.networkID == cap.networkID && $0.period == cap.period }
+                guard let current, current.enabled, current.limitBytes == cap.limitBytes else {
+                    capsDirty = true
+                    continue
+                }
+                // Record the alert only once it was shown, so it still fires after notifications are allowed.
+                guard await notifications.post(alert, networkName: network.displayName, resets: interval.end) else { continue }
                 try await store.updateCapAlertState(
                     networkID: cap.networkID, period: cap.period,
                     lastAlertPeriodStart: result.updated.lastAlertPeriodStart, lastAlertThreshold: result.updated.lastAlertThreshold)
-                await notifications.post(alert, networkName: network.displayName, resets: interval.end)
             }
         } catch {
             log.error("cap evaluation failed: \(String(describing: error), privacy: .public)")

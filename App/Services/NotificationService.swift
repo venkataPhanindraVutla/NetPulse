@@ -33,11 +33,12 @@ actor NotificationService {
         }
     }
 
-    func post(_ a: CapAlert, networkName: String, resets: Date) async {
+    /// Returns whether the notification was handed to macOS.
+    func post(_ a: CapAlert, networkName: String, resets: Date) async -> Bool {
         let status = await status()
         guard status == .authorized else {
-            log.info("cap alert not posted, notifications status=\(String(describing: status), privacy: .public)")
-            return
+            log.debug("cap alert not posted, notifications status=\(String(describing: status), privacy: .public)")
+            return false
         }
         let period = a.period == .monthly ? "monthly" : "daily"
         let content = UNMutableNotificationContent()
@@ -47,8 +48,10 @@ actor NotificationService {
         let id = "cap-\(a.networkID)-\(a.period.rawValue)-\(a.threshold)-\(Int(resets.timeIntervalSince1970))"
         do {
             try await UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: id, content: content, trigger: nil))
+            return true
         } catch {
             log.error("cap alert failed: \(String(describing: error), privacy: .public)")
+            return false
         }
     }
 

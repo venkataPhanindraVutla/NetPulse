@@ -32,6 +32,8 @@ public final class SQLiteDatabase: @unchecked Sendable {
             handle = nil
             throw error
         }
+        // Wait briefly instead of failing when another connection (e.g. a second copy of the app) holds the lock.
+        sqlite3_busy_timeout(handle, 2000)
     }
 
     deinit {
