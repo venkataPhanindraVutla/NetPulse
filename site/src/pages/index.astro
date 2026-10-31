@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Panel from '../components/Panel.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const img = (name: string) => `${base}img/${name}`;
@@ -8,18 +9,16 @@ const version = '0.1.0';
 const download = `${repo}/releases/download/v${version}/NetPulse-${version}.dmg`;
 const description = 'NetPulse is a free, open-source macOS menu bar app that shows live network speed and breaks your data usage down by app and by network. Everything stays on your Mac.';
 
-const tabs = [
-	{ name: 'Now', image: 'now-light.png', text: 'Live download and upload speed, today\'s totals, and how close you are to your cap.' },
-	{ name: 'Apps', image: 'apps-light.png', text: 'Every app ranked by usage for today, this week or this month, on one network or all of them.' },
-	{ name: 'History', image: 'history-light.png', text: 'Daily bars for the month with your cap\'s pace line, and totals for week, month and last month.' },
+const race = [
+	{ name: 'Safari', color: '#1e90ff', gb: 1.84, down: 93 },
+	{ name: 'Zoom', color: '#2d8cff', gb: 0.62, down: 50 },
+	{ name: 'Software Update', color: '#8e8e93', gb: 0.4, down: 100 },
+	{ name: 'Slack', color: '#611f69', gb: 0.15, down: 94 },
+	{ name: 'Spotify', color: '#1db954', gb: 0.12, down: 97 },
+	{ name: 'Other / system', color: '#c7c7cc', gb: 0.2, down: 91, other: true },
 ];
-
-const facts = [
-	{ value: '1 s', label: 'live speed refresh' },
-	{ value: '~1%', label: 'CPU, measured on Apple Silicon' },
-	{ value: 'Per network', label: 'Wi-Fi, hotspot and Ethernet' },
-	{ value: '0', label: 'accounts, trackers or uploads' },
-];
+const peak = Math.max(...race.map((r) => r.gb));
+const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
 ---
 
 <html lang="en">
@@ -36,19 +35,18 @@ const facts = [
 		<meta property="og:type" content="website" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet" />
+		<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet" />
+		<link rel="preload" as="image" href={img('hero.jpg')} />
 	</head>
 	<body>
 		<nav>
 			<div class="wrap">
-				<a class="brand" href={base} aria-label="NetPulse home">
-					<img src={`${base}favicon.svg`} alt="" width="24" height="24" />NetPulse
-				</a>
+				<a class="brand" href={base} aria-label="NetPulse home"><img src={`${base}favicon.svg`} alt="" width="24" height="24" />NetPulse</a>
 				<div class="links">
-					<a href="#features">Features</a>
+					<a href="#apps">Apps</a>
+					<a href="#networks">Networks</a>
 					<a href="#measuring">How it measures</a>
 					<a href="#privacy">Privacy</a>
-					<a href="#install">Install</a>
 					<a href={repo}>GitHub</a>
 				</div>
 				<a class="btn btn-primary btn-sm" href={download}>Download</a>
@@ -56,66 +54,101 @@ const facts = [
 		</nav>
 
 		<header class="hero">
+			<div class="glow" aria-hidden="true"></div>
 			<div class="wrap">
 				<a class="eyebrow" href={`${repo}/releases/tag/v${version}`}><span class="dot"></span>Version {version} · free and open source</a>
-				<h1>See where your bandwidth goes.</h1>
+				<h1>See where your <span class="shimmer">bandwidth</span> goes.</h1>
 				<p class="lede">NetPulse sits in your menu bar with live download and upload speed, and breaks every megabyte down by app and by network. Nothing leaves your Mac.</p>
 				<div class="cta">
-					<a class="btn btn-primary" href={download}>
+					<a class="btn btn-primary btn-lg" href={download}>
 						<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8m0 0L5 7m3 3 3-3M3 13h10" /></svg>
 						Download for macOS
 					</a>
-					<a class="btn btn-ghost" href={repo}>View on GitHub</a>
+					<a class="btn btn-ghost btn-lg" href={repo}>View on GitHub</a>
 				</div>
 				<p class="meta">macOS 14 or later · 1 MB · Apple Silicon and Intel</p>
 			</div>
 		</header>
 
-		<div class="stage-wrap">
-			<div class="stage" role="img" aria-label="A MacBook on a white desk with the NetPulse panel open under its menu bar speed readout">
-				<div class="np-label" aria-hidden="true"><span>↑ 1.2M</span><span>↓ 8.4M</span></div>
-				<img class="np-pop" src={img('now-light.png')} alt="" loading="eager" />
-			</div>
-			<p class="caption">Photo by Rubén Menárguez on Unsplash · panel shown with sample data</p>
-		</div>
-
-		<section id="features">
-			<div class="wrap">
-				<p class="kicker">One click from the menu bar</p>
-				<h2>Live speed, the apps behind it, and the month so far.</h2>
-				<p class="sub">Three tabs answer the three questions you actually have: is the network slow, which app used my data, and am I staying under my cap.</p>
-				<div class="tabs">
-					{tabs.map((tab) => (
-						<article class="card">
-							<div class="shot"><img src={img(tab.image)} alt={`The ${tab.name} tab`} loading="lazy" width="320" /></div>
-							<div class="text">
-								<h3>{tab.name}</h3>
-								<p>{tab.text}</p>
-							</div>
-						</article>
-					))}
+		<section class="zoom" aria-label="NetPulse running on a MacBook">
+			<div class="sticky">
+				<div class="scene">
+					<img class="photo" src={img('hero.jpg')} alt="A MacBook on a white desk with NetPulse open under its menu bar speed readout" width="3200" height="1906" />
+					<div class="mb-label" aria-hidden="true"><span>↑ 900K</span><span>↓ 6.2M</span></div>
+					<div class="panel-anchor"><Panel id="hero-panel" /></div>
 				</div>
-				<div class="facts">
-					{facts.map((fact) => (
-						<div class="fact"><b>{fact.value}</b><span>{fact.label}</span></div>
+				<div class="caps">
+					<div class="cap"><span class="kicker">Now</span><h2>Live, every second.</h2><p>Download and upload speed in your menu bar, with a sparkline of the last minute and today's running total.</p></div>
+					<div class="cap"><span class="kicker">Apps</span><h2>Every app, ranked.</h2><p>Helpers roll up under their app, and anything that can't be attributed shows as Other, so it always adds up.</p></div>
+					<div class="cap"><span class="kicker">History</span><h2>The month at a glance.</h2><p>Daily bars with your cap's pace line. Hover a day for its total.</p></div>
+				</div>
+				<div class="scroll-hint" aria-hidden="true"><span>Scroll</span><i></i></div>
+				<p class="credit">Photo: Rubén Menárguez / Unsplash · simulated sample data</p>
+			</div>
+		</section>
+
+		<section id="apps" class="race-section">
+			<div class="wrap split">
+				<div>
+					<p class="kicker">Per app</p>
+					<h2>Where did <span data-reveal class="num-inline"><b data-count="3.33" data-dec="2"></b> GB</span> go today?</h2>
+					<p class="sub">NetPulse reads macOS's own per-process counters and groups helper processes under the app they belong to. Chrome's twenty helpers count as Chrome.</p>
+					<div class="legend"><span><i class="lg-down"></i>download</span><span><i class="lg-up"></i>upload</span></div>
+				</div>
+				<div class="race" data-reveal>
+					{race.map((r, i) => (
+						<div class={`race-row${r.other ? ' other' : ''}`} style={`--w:${(r.gb / peak) * 100}%; --d:${r.down}%; --i:${i}`}>
+							<span class="p-ic big" style={`background:${r.color}`}>{r.other ? '⚙︎' : initials(r.name)}</span>
+							<div class="race-main">
+								<div class="race-top"><span>{r.name}</span><b data-count={r.gb * 1e9} data-bytes>0 B</b></div>
+								<div class="race-track"><i></i></div>
+							</div>
+						</div>
 					))}
 				</div>
 			</div>
 		</section>
 
-		<section id="networks" class="split-section">
-			<div class="wrap split">
+		<section id="networks" class="net-section">
+			<div class="wrap split rev">
+				<div class="net-demo" data-reveal>
+					<div class="net-seg" role="tablist" aria-label="Choose a network">
+						<button role="tab" data-net="home" aria-selected="true">Home Wi-Fi</button>
+						<button role="tab" data-net="hotspot" aria-selected="false">iPhone hotspot</button>
+						<button role="tab" data-net="office" aria-selected="false">Office Ethernet</button>
+						<span class="net-thumb" aria-hidden="true"></span>
+					</div>
+					<div class="net-card">
+						<div class="net-head">
+							<div><span class="net-title" data-net-title>Home Wi-Fi</span><b class="net-used" data-net-used>64.2 GB</b><span class="net-cap" data-net-cap>of 100 GB this month</span></div>
+							<span class="net-note" data-net-note data-level="ok">64% used · 4 days left</span>
+						</div>
+						<div class="net-bar"><i data-net-bar></i></div>
+						<div class="net-apps"></div>
+					</div>
+					<div class="toast" role="status" aria-live="polite">
+						<span class="toast-ic"><img src={`${base}favicon.svg`} alt="" width="34" height="34" /></span>
+						<div><b>iPhone hotspot: 80% of monthly cap</b><span>8.3 GB of 10 GB used · resets Nov 15</span></div>
+						<small>now</small>
+					</div>
+				</div>
 				<div>
 					<p class="kicker">Per network</p>
 					<h2>Your hotspot cap only counts hotspot traffic.</h2>
-					<p class="sub">Usage is split by the network it travelled over: home Wi-Fi, your phone's hotspot, the office Ethernet. Give each one its own daily or monthly cap and billing day, and get one notification at 80% and one at 100%. No repeats.</p>
-					<ul class="ticks">
-						<li>Menu bar label: stacked, single line, download only or icon only</li>
-						<li>MB/s or Mbps</li>
-						<li>Pause, resume and launch at login</li>
-					</ul>
+					<p class="sub">Usage is split by the network it travelled over. Give each one its own daily or monthly cap and billing day, and get one notification at 80% and one at 100%. No repeats, no nagging.</p>
+					<p class="try">Try it: switch networks on the left.</p>
 				</div>
-				<div class="split-shot"><img src={img('now-dark.png')} alt="The Now tab in dark mode" loading="lazy" width="320" /></div>
+			</div>
+		</section>
+
+		<section class="facts-section">
+			<div class="wrap">
+				<div class="facts" data-reveal>
+					<div class="fact"><b><span data-count="1">0</span> s</b><span>live speed refresh</span></div>
+					<div class="fact"><b>~<span data-count="1">0</span>%</b><span>CPU, measured on Apple Silicon</span></div>
+					<div class="fact"><b><span data-count="1">0</span> MB</b><span>download size</span></div>
+					<div class="fact"><b><span data-count="0">0</span></b><span>accounts, trackers or uploads</span></div>
+				</div>
 			</div>
 		</section>
 
@@ -123,10 +156,10 @@ const facts = [
 			<div class="wrap">
 				<p class="kicker">How it measures</p>
 				<h2>Honest numbers, including what it can't see.</h2>
-				<div class="grid">
+				<div class="grid" data-reveal>
 					<div class="item"><h3>Network totals</h3><p>Read from the macOS 64-bit interface counters every second. Virtual interfaces like VPN tunnels are never counted twice.</p></div>
-					<div class="item"><h3>Per-app usage</h3><p>From macOS's built-in <code>nettop</code>, sampled every 10 seconds. Helper processes are grouped under the app they belong to.</p></div>
-					<div class="item"><h3>Other / system</h3><p>Traffic that can't be tied to an app, such as protocol overhead or very short-lived processes, is shown as its own row, so the per-app list always adds up to the total.</p></div>
+					<div class="item"><h3>Per-app usage</h3><p>From macOS's built-in <code>nettop</code>, sampled every 10 seconds, with helper processes grouped under their app.</p></div>
+					<div class="item"><h3>Other / system</h3><p>Protocol overhead and very short-lived processes get their own row, so the per-app list always adds up to the total.</p></div>
 					<div class="item"><h3>Device traffic, not your bill</h3><p>NetPulse counts what your Mac sends and receives. Your provider may count differently. Time when NetPulse isn't running is marked as missing.</p></div>
 				</div>
 			</div>
@@ -139,8 +172,8 @@ const facts = [
 					<h2>Local by design.</h2>
 					<p class="sub">No account, no telemetry, and NetPulse makes no network connections of its own. Your history is a small SQLite file on your Mac that you can delete any time.</p>
 				</div>
-				<ul class="ticks">
-					<li><strong>Location</strong> is asked once, only to read your Wi-Fi network's name. Decline it and NetPulse names networks by their router instead.</li>
+				<ul class="ticks" data-reveal>
+					<li><strong>Location</strong> is asked once, only to read your Wi-Fi network's name. Decline and NetPulse names networks by their router instead.</li>
 					<li><strong>Notifications</strong> are asked for only when you turn on a cap.</li>
 					<li>Data lives in <code>~/Library/Application Support/NetPulse</code>.</li>
 					<li>MIT licensed. Read every line on GitHub.</li>
@@ -152,14 +185,17 @@ const facts = [
 			<div class="wrap">
 				<p class="kicker">Install</p>
 				<h2>Three steps, one of them unusual.</h2>
-				<ol class="steps">
+				<ol class="steps" data-reveal>
 					<li><b>Download</b><p>Get <a class="link" href={download}>NetPulse-{version}.dmg</a> and drag NetPulse into Applications.</p></li>
 					<li><b>Open it the first time</b><p>This build isn't notarized yet, so macOS will refuse to open it. Right-click NetPulse in Applications and choose <em>Open</em>, or click <em>Open Anyway</em> in System Settings › Privacy &amp; Security.</p></li>
 					<li><b>Find it in the menu bar</b><p>If your menu bar is full, macOS can hide new icons behind the notch. Allow NetPulse in System Settings › Menu Bar or remove an icon or two. Double-clicking NetPulse in Applications also opens its panel.</p></li>
 				</ol>
-				<div class="source">
-					<span>Prefer to build it yourself? It's a Swift package plus an Xcode project generated by xcodegen.</span>
-					<a class="btn btn-ghost btn-sm" href={`${repo}#readme`}>Build from source</a>
+				<div class="final">
+					<h2>Know where it all goes.</h2>
+					<div class="cta">
+						<a class="btn btn-primary btn-lg" href={download}>Download for macOS</a>
+						<a class="btn btn-ghost btn-lg" href={`${repo}#readme`}>Build from source</a>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -170,64 +206,136 @@ const facts = [
 				<span>Hero photo by <a class="link" href="https://unsplash.com/photos/macbook-on-top-white-table-v_1t1DzfAUA">Rubén Menárguez</a> on Unsplash</span>
 			</div>
 		</footer>
+
+		<script src="../scripts/site.ts"></script>
 	</body>
 </html>
 
 <style>
-	nav { position: sticky; top: 0; z-index: 10; background: rgba(255, 255, 255, 0.82); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--border); }
+	nav { position: sticky; top: 0; z-index: 30; background: rgba(255, 255, 255, 0.72); backdrop-filter: saturate(1.6) blur(14px); border-bottom: 1px solid rgba(228, 228, 231, 0.7); }
 	nav .wrap { display: flex; align-items: center; height: 60px; gap: 28px; }
 	.brand { display: flex; align-items: center; gap: 9px; font-weight: 600; letter-spacing: -0.01em; }
 	.brand img { border-radius: 7px; }
 	nav .links { display: flex; gap: 22px; margin-left: auto; font-size: 14px; color: var(--muted); }
+	nav .links a { transition: color 0.15s; }
 	nav .links a:hover { color: var(--fg); }
 
-	.hero { padding: 76px 0 28px; text-align: center; }
-	.eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; transition: border-color 0.15s; }
+	.hero { position: relative; padding: 84px 0 56px; text-align: center; overflow: hidden; }
+	.glow { position: absolute; inset: -20% -10% auto; height: 620px; background: radial-gradient(40% 50% at 30% 40%, rgba(10, 132, 255, 0.14), transparent 70%), radial-gradient(35% 45% at 72% 30%, rgba(48, 164, 108, 0.13), transparent 70%), radial-gradient(30% 40% at 50% 80%, rgba(175, 82, 222, 0.08), transparent 70%); filter: blur(10px); animation: drift 14s ease-in-out infinite alternate; pointer-events: none; }
+	@keyframes drift { to { transform: translate3d(2%, 3%, 0) scale(1.05); } }
+	.hero .wrap { position: relative; }
+	.eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); background: rgba(255, 255, 255, 0.7); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; transition: border-color 0.15s; }
 	.eyebrow:hover { border-color: #a1a1aa; }
-	.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--up); }
-	h1 { font-size: clamp(40px, 6.4vw, 72px); line-height: 1.03; letter-spacing: -0.04em; font-weight: 600; margin: 22px auto 18px; max-width: 13ch; }
-	.lede { font-size: 18px; color: var(--muted); max-width: 46ch; margin: 0 auto; }
-	.cta { display: flex; gap: 10px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
-	.meta { margin-top: 12px; font-size: 13px; color: var(--muted); }
+	.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--up); box-shadow: 0 0 0 3px rgba(48, 164, 108, 0.18); }
+	h1 { font-size: clamp(42px, 7vw, 84px); line-height: 1.02; letter-spacing: -0.045em; font-weight: 650; margin: 24px auto 20px; max-width: 13ch; }
+	.shimmer { background: linear-gradient(90deg, #0a84ff, #30a46c, #0a84ff); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 6s linear infinite; }
+	@keyframes shimmer { to { background-position: -200% 0; } }
+	.lede { font-size: 19px; color: var(--muted); max-width: 46ch; margin: 0 auto; }
+	.cta { display: flex; gap: 10px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+	.btn-lg { height: 46px; padding: 0 20px; font-size: 15px; border-radius: 10px; }
+	.btn-primary { box-shadow: 0 6px 20px rgba(9, 9, 11, 0.18); }
+	.btn-primary:hover { transform: translateY(-1px); }
+	.btn { transition: background 0.15s, transform 0.15s, border-color 0.15s; }
+	.meta { margin-top: 14px; font-size: 13px; color: var(--muted); }
 
-	.stage-wrap { max-width: 1288px; margin: 44px auto 0; padding: 0 24px 24px; }
-	.stage { position: relative; aspect-ratio: 2400 / 1429; border-radius: 18px; overflow: hidden; background: #ececec center / cover no-repeat; background-image: var(--hero); }
-	.np-label { position: absolute; left: 57.9%; top: 21.55%; height: 1.25%; display: flex; flex-direction: column; justify-content: center; font: 600 clamp(3px, 0.48vw, 7px) / 1 'Geist Mono', monospace; color: #111; background: rgba(0, 0, 0, 0.08); padding: 0 0.35%; border-radius: 2px; }
-	.np-pop { position: absolute; left: 53.6%; top: 23.4%; width: 9.6%; border-radius: 6px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 0 0.5px rgba(0, 0, 0, 0.12); }
-	.caption { text-align: right; font-size: 12px; color: var(--muted); margin-top: 8px; padding: 0 6px; }
+	/* scroll zoom */
+	.zoom { position: relative; height: 380vh; }
+	.sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #eceef0; }
+	.scene { position: absolute; left: 0; top: 0; width: 3200px; height: 1906px; transform-origin: 0 0; will-change: transform; }
+	.photo { width: 3200px; height: 1906px; }
+	.mb-label { position: absolute; left: 1872px; top: 409px; height: 22px; padding: 0 6px; display: flex; flex-direction: column; justify-content: center; font: 600 9px/1.05 'Geist Mono', monospace; color: #111; background: rgba(0, 0, 0, 0.09); border-radius: 4px; font-variant-numeric: tabular-nums; }
+	.panel-anchor { position: absolute; left: 1715px; top: 446px; transform: scale(0.96); transform-origin: 0 0; }
+	.caps { position: absolute; left: max(24px, calc((100vw - 1120px) / 2)); top: 50%; transform: translateY(-50%); width: min(30vw, 380px); pointer-events: none; }
+	.cap { position: absolute; top: 0; transform: translateY(-50%) translateY(14px); opacity: 0; transition: opacity 0.45s ease, transform 0.45s ease; }
+	.cap.on { opacity: 1; transform: translateY(-50%); }
+	.cap h2 { font-size: clamp(30px, 3.4vw, 46px); margin: 8px 0 12px; }
+	.cap p { color: #52525b; font-size: 17px; }
+	.scroll-hint { position: absolute; left: 50%; bottom: 26px; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12px; color: #52525b; transition: opacity 0.3s; }
+	.scroll-hint i { width: 22px; height: 34px; border: 1.5px solid #71717a; border-radius: 12px; position: relative; }
+	.scroll-hint i::after { content: ''; position: absolute; left: 50%; top: 7px; width: 3px; height: 7px; border-radius: 2px; background: #71717a; translate: -50% 0; animation: wheel 1.6s ease-in-out infinite; }
+	@keyframes wheel { 60% { transform: translateY(9px); opacity: 0; } }
+	.credit { position: absolute; right: 16px; bottom: 12px; font-size: 11px; color: #71717a; }
 
-	.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 44px; }
-	.card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--soft); overflow: hidden; display: flex; flex-direction: column; }
-	.shot { padding: 26px 26px 0; display: flex; justify-content: center; align-items: flex-start; height: 380px; overflow: hidden; }
-	.shot img { width: 100%; max-width: 272px; border-radius: 10px; box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05); }
-	.card .text { background: #fff; border-top: 1px solid var(--border); padding: 18px 20px 20px; flex: 1; }
-	h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
-	.card p, .item p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+	/* app race */
+	.split { display: grid; grid-template-columns: 1fr 1.05fr; gap: 72px; align-items: center; }
+	.split.rev { grid-template-columns: 1.1fr 1fr; }
+	.num-inline b { font-weight: inherit; font-variant-numeric: tabular-nums; }
+	.legend { display: flex; gap: 18px; margin-top: 22px; font-size: 13px; color: var(--muted); }
+	.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+	.lg-down { background: var(--down); }
+	.lg-up { background: var(--up); }
+	.race { display: grid; gap: 16px; padding: 28px; border: 1px solid var(--border); border-radius: 20px; background: linear-gradient(180deg, #fff, #fafafa); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.18); }
+	.race-row { display: flex; gap: 14px; align-items: center; opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease calc(var(--i) * 90ms), transform 0.5s ease calc(var(--i) * 90ms); }
+	.race.in .race-row { opacity: 1; transform: none; }
+	.p-ic.big { width: 34px; height: 34px; border-radius: 9px; font-size: 13px; display: grid; place-items: center; color: #fff; font-weight: 700; flex: none; }
+	.race-main { flex: 1; min-width: 0; }
+	.race-top { display: flex; justify-content: space-between; font-size: 15px; font-weight: 500; margin-bottom: 7px; }
+	.race-top b { font-weight: 600; font-variant-numeric: tabular-nums; color: #3f3f46; }
+	.race-track { height: 8px; border-radius: 4px; background: #f1f1f3; overflow: hidden; }
+	.race-track i { display: block; height: 100%; width: 0; border-radius: 4px; background: linear-gradient(90deg, var(--down) 0 var(--d), var(--up) var(--d) 100%); transition: width 1.2s cubic-bezier(0.25, 1, 0.3, 1) calc(var(--i) * 90ms + 150ms); }
+	.race.in .race-track i { width: var(--w); }
+	.race-row.other .race-top span { color: var(--muted); }
+	.race-row.other .race-track i { background: #c7c7cc; }
 
-	.facts { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--border); border-radius: var(--radius); margin-top: 20px; }
-	.fact { padding: 22px; border-right: 1px solid var(--border); }
+	/* network demo */
+	.net-section { background: linear-gradient(180deg, #fafafa, #fff); }
+	.net-demo { position: relative; }
+	.net-seg { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); padding: 4px; background: #f1f1f3; border: 1px solid var(--border); border-radius: 12px; }
+	.net-seg button { position: relative; z-index: 1; font: 500 14px Geist, sans-serif; padding: 9px 4px; border: 0; background: none; color: #52525b; cursor: pointer; border-radius: 8px; transition: color 0.2s; }
+	.net-seg button[aria-selected='true'] { color: var(--fg); }
+	.net-thumb { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.04); transition: transform 0.4s cubic-bezier(0.3, 1.2, 0.4, 1); }
+	.net-card { margin-top: 14px; padding: 24px; border: 1px solid var(--border); border-radius: 18px; background: #fff; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.2); }
+	.net-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+	.net-title { display: block; font-size: 13px; color: var(--muted); font-weight: 500; }
+	.net-used { font-size: 40px; font-weight: 650; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; margin-right: 8px; }
+	.net-cap { font-size: 14px; color: var(--muted); }
+	.net-note { font-size: 12.5px; font-weight: 500; padding: 4px 10px; border-radius: 999px; background: #e8f3ff; color: #0a66c2; transition: background 0.3s, color 0.3s; }
+	.net-note[data-level='warn'] { background: #fff2e0; color: #b25e00; }
+	.net-bar { height: 10px; border-radius: 5px; background: #f1f1f3; overflow: hidden; margin: 16px 0 22px; }
+	.net-bar i { display: block; height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(0.25, 1, 0.3, 1), background 0.4s; }
+	.net-apps { position: relative; }
+	.net-apps :global(.net-row) { position: absolute; left: 0; right: 0; top: 0; height: 46px; display: grid; grid-template-columns: 26px 140px 1fr 70px; gap: 12px; align-items: center; transition: transform 0.6s cubic-bezier(0.3, 1.1, 0.4, 1); font-size: 14px; }
+	.net-apps :global(.p-ic) { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; color: #fff; font: 700 10.5px Geist, sans-serif; }
+	.net-apps :global(.track) { height: 6px; border-radius: 3px; background: #f1f1f3; overflow: hidden; }
+	.net-apps :global(.track i) { display: block; height: 100%; border-radius: 3px; background: var(--down); transition: width 0.7s cubic-bezier(0.25, 1, 0.3, 1); }
+	.net-apps :global(.val) { text-align: right; font-variant-numeric: tabular-nums; color: #3f3f46; font-weight: 500; }
+	.try { margin-top: 18px; font-size: 14px; color: var(--down); font-weight: 500; }
+	.toast { position: absolute; right: -18px; top: -64px; width: 340px; display: flex; gap: 11px; align-items: center; padding: 11px 13px; border-radius: 16px; background: rgba(250, 250, 250, 0.86); backdrop-filter: blur(20px) saturate(1.8); border: 0.5px solid rgba(0, 0, 0, 0.12); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18); font-size: 13px; opacity: 0; transform: translateX(30px) scale(0.96); transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.3, 1.3, 0.4, 1); pointer-events: none; z-index: 2; }
+	.toast.show { opacity: 1; transform: none; }
+	.toast-ic img { border-radius: 8px; }
+	.toast b { display: block; font-weight: 600; }
+	.toast span { color: #52525b; font-size: 12.5px; }
+	.toast small { align-self: flex-start; margin-left: auto; color: #8e8e93; font-size: 11px; }
+
+	/* facts */
+	.facts-section { padding: 0 0 96px; border-top: 0 !important; }
+	.facts { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
+	.fact { padding: 26px; border-right: 1px solid var(--border); }
 	.fact:last-child { border-right: 0; }
-	.fact b { display: block; font-size: 26px; letter-spacing: -0.02em; font-weight: 600; }
+	.fact b { display: block; font-size: 34px; letter-spacing: -0.03em; font-weight: 650; font-variant-numeric: tabular-nums; }
 	.fact span { font-size: 13px; color: var(--muted); }
 
-	.split { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
-	.split-shot { display: flex; justify-content: center; background: var(--soft); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; }
-	.split-shot img { max-width: 300px; border-radius: 12px; box-shadow: 0 10px 34px rgba(0, 0, 0, 0.18); }
-	.ticks { list-style: none; padding: 0; margin-top: 22px; display: grid; gap: 12px; }
-	.ticks li { position: relative; padding-left: 26px; color: #3f3f46; font-size: 15px; }
-	.ticks li::before { content: ''; position: absolute; left: 0; top: 7px; width: 14px; height: 9px; border-left: 2px solid var(--up); border-bottom: 2px solid var(--up); transform: rotate(-45deg); transform-origin: left top; translate: 2px 4px; }
+	/* reveal */
+	[data-reveal]:not(.race):not(.num-inline):not(.net-demo):not(.facts) { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+	[data-reveal].in { opacity: 1 !important; transform: none !important; }
 
-	.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 40px; }
-	.item { background: #fff; padding: 26px; }
-
+	.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; margin-top: 40px; }
+	.item { background: #fff; padding: 28px; transition: background 0.2s; }
+	.item:hover { background: #fafafa; }
+	h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+	.item p { font-size: 14px; color: var(--muted); margin-top: 6px; }
+	.ticks { list-style: none; padding: 0; display: grid; gap: 14px; }
+	.ticks li { position: relative; padding: 14px 16px 14px 44px; color: #3f3f46; font-size: 15px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
+	.ticks li::before { content: ''; position: absolute; left: 17px; top: 18px; width: 12px; height: 7px; border-left: 2px solid var(--up); border-bottom: 2px solid var(--up); transform: rotate(-45deg); }
 	.steps { list-style: none; padding: 0; counter-reset: step; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
-	.steps li { counter-increment: step; border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
-	.steps li::before { content: counter(step); display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--fg); color: #fff; font: 600 13px 'Geist Mono', monospace; margin-bottom: 14px; }
-	.steps b { font-weight: 600; }
+	.steps li { counter-increment: step; border: 1px solid var(--border); border-radius: 18px; padding: 24px; background: #fff; transition: transform 0.2s, box-shadow 0.2s; }
+	.steps li:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -20px rgba(0, 0, 0, 0.2); }
+	.steps li::before { content: counter(step); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--fg); color: #fff; font: 600 13px 'Geist Mono', monospace; margin-bottom: 14px; }
 	.steps p { font-size: 14px; color: var(--muted); margin-top: 4px; }
 	.link { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #a1a1aa; }
 	.link:hover { text-decoration-color: currentColor; }
-	.source { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 20px; padding: 16px 20px; border-radius: var(--radius); background: var(--soft); font-size: 14px; color: var(--muted); }
+	.final { margin-top: 88px; padding: 64px 24px; text-align: center; border-radius: 24px; background: radial-gradient(60% 80% at 30% 0%, rgba(10, 132, 255, 0.1), transparent 70%), radial-gradient(50% 70% at 80% 100%, rgba(48, 164, 108, 0.1), transparent 70%), #fafafa; border: 1px solid var(--border); }
+	.final h2 { margin: 0 auto; }
 
 	footer { border-top: 1px solid var(--border); padding: 28px 0; font-size: 13px; color: var(--muted); }
 	footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -235,15 +343,25 @@ const facts = [
 	@media (max-width: 900px) {
 		nav .links { display: none; }
 		nav .wrap { justify-content: space-between; }
-		.tabs, .facts, .steps, .grid, .split { grid-template-columns: 1fr; }
-		.split { gap: 36px; }
+		.split, .split.rev, .grid, .steps, .facts { grid-template-columns: 1fr; }
+		.split { gap: 40px; }
 		.fact { border-right: 0; border-bottom: 1px solid var(--border); }
 		.fact:last-child { border-bottom: 0; }
-		.stage { border-radius: 12px; }
+		.zoom { height: 320vh; }
+		.caps { left: 20px; right: 20px; width: auto; top: auto; bottom: 24px; transform: none; height: 150px; }
+		.cap { top: auto; bottom: 0; transform: translateY(14px); padding: 16px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.82); backdrop-filter: blur(14px); border: 1px solid rgba(0, 0, 0, 0.06); }
+		.cap.on { transform: none; }
+		.cap h2 { font-size: 24px; margin: 4px 0 6px; }
+		.cap p { font-size: 14px; }
+		.net-apps :global(.net-row) { grid-template-columns: 26px 1fr 64px; }
+		.net-apps :global(.track) { display: none; }
+		.toast { right: 0; left: 0; width: auto; top: -72px; }
 		section { padding: 72px 0; }
 	}
-</style>
-
-<style define:vars={{ hero: `url(${img('hero.jpg')})` }}>
-	.stage { background-image: var(--hero); }
+	@media (prefers-reduced-motion: reduce) {
+		.zoom { height: auto; }
+		.sticky { position: relative; height: 70vh; }
+		.glow, .shimmer, .scroll-hint i::after { animation: none; }
+		.cap { display: none; }
+	}
 </style>

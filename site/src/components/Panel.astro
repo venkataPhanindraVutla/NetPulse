@@ -1,0 +1,143 @@
+---
+// An HTML version of the NetPulse panel. Values are filled in and animated by src/scripts/site.ts.
+interface Props { id: string }
+const { id } = Astro.props;
+---
+
+<div class="panel" id={id} data-panel>
+	<div class="p-seg" role="tablist" aria-label="NetPulse panel tabs">
+		<button role="tab" aria-selected="true" data-tab="now">Now</button>
+		<button role="tab" aria-selected="false" data-tab="apps">Apps</button>
+		<button role="tab" aria-selected="false" data-tab="history">History</button>
+		<span class="p-seg-thumb" aria-hidden="true"></span>
+	</div>
+
+	<div class="p-body">
+		<div class="p-view" data-view="now">
+			<div class="p-sec">
+				<div class="p-h"><span>Live</span><span class="p-pill" data-bind="network">Home Wi-Fi</span></div>
+				<div class="p-big">
+					<div><b class="down" data-bind="down">8.4 MB/s</b><span>download</span></div>
+					<div><b class="up" data-bind="up">1.2 MB/s</b><span>upload</span></div>
+				</div>
+				<svg class="p-spark" viewBox="0 0 280 40" preserveAspectRatio="none" aria-hidden="true">
+					<defs>
+						<linearGradient id={`${id}-g`} x1="0" x2="0" y1="0" y2="1">
+							<stop offset="0" stop-color="#0a84ff" stop-opacity=".28" />
+							<stop offset="1" stop-color="#0a84ff" stop-opacity="0" />
+						</linearGradient>
+					</defs>
+					<path class="area" fill={`url(#${id}-g)`} d="" />
+					<polyline class="line-down" points="" />
+					<polyline class="line-up" points="" />
+				</svg>
+			</div>
+			<div class="p-sec">
+				<div class="p-h"><span>Today</span></div>
+				<div class="p-big">
+					<div><b data-bind="todayDown">3.41 GB</b><span>↓ downloaded</span></div>
+					<div><b data-bind="todayUp">432 MB</b><span>↑ uploaded</span></div>
+				</div>
+			</div>
+			<div class="p-sec">
+				<div class="p-h"><span data-bind="capTitle">Home Wi-Fi · October</span><span class="p-light" data-bind="capText">64.2 / 100 GB</span></div>
+				<div class="p-bar"><i data-bind="capBar" style="width:64%"></i></div>
+				<div class="p-small"><span data-bind="capLeft">4 days left</span><span data-bind="capPace">~9.0 GB/day</span></div>
+			</div>
+			<div class="p-sec">
+				<div class="p-h"><span>Top apps today</span><span class="p-link" data-goto="apps">All apps ›</span></div>
+				<div class="p-top" data-bind="top"></div>
+			</div>
+		</div>
+
+		<div class="p-view" data-view="apps" hidden>
+			<div class="p-sec">
+				<div class="p-seg p-seg-small" aria-hidden="true"><button aria-selected="true">Today</button><button>Week</button><button>Month</button></div>
+				<div class="p-h p-row-gap"><span class="p-strong" data-bind="appsTotal">3.97 GB total</span><span class="p-pill">All networks ▾</span></div>
+				<div class="p-apps" data-bind="apps"></div>
+			</div>
+		</div>
+
+		<div class="p-view" data-view="history" hidden>
+			<div class="p-sec">
+				<div class="p-h"><span class="p-strong p-case">‹ October 2026 ›</span><span class="p-pill">Home Wi-Fi ▾</span></div>
+				<div class="p-chart" data-bind="chart"><span class="p-pace" title="daily pace for cap"></span></div>
+				<div class="p-small"><span>1 Oct</span><span data-bind="chartTip">hover a day</span><span>today</span></div>
+			</div>
+			<div class="p-sec p-table">
+				<div><span>Today</span><span>↓ 3.41 GB · ↑ 432 MB</span></div>
+				<div><span>This week</span><span>↓ 14.1 GB · ↑ 1.59 GB</span></div>
+				<div><span>October</span><span>↓ 57.6 GB · ↑ 6.6 GB</span></div>
+				<div><span>September</span><span>↓ 71.0 GB · ↑ 8.3 GB</span></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="p-foot">
+		<span><i class="p-dot"></i>Monitoring</span>
+		<span class="p-icons" aria-hidden="true">
+			<svg viewBox="0 0 16 16"><rect x="4" y="3" width="2.4" height="10" rx=".6" /><rect x="9.6" y="3" width="2.4" height="10" rx=".6" /></svg>
+			<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2" /><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4" stroke-width="1.6" stroke-linecap="round" /></svg>
+			<svg viewBox="0 0 16 16"><path d="M8 2v6M4.6 4.2a5 5 0 1 0 6.8 0" fill="none" stroke-width="1.6" stroke-linecap="round" /></svg>
+		</span>
+	</div>
+</div>
+
+<style is:global>
+	.panel { --pf: #1d1d1f; --pm: #6e6e73; width: 320px; background: rgba(246, 246, 247, 0.96); border-radius: 13px; border: 0.5px solid rgba(0, 0, 0, 0.16); box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.1); color: var(--pf); font: 13px/1.35 -apple-system, BlinkMacSystemFont, 'SF Pro Text', Geist, sans-serif; overflow: hidden; text-align: left; backdrop-filter: blur(20px); user-select: none; }
+	.panel button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+	.p-seg { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); margin: 11px 13px 9px; padding: 2px; background: #e3e3e6; border-radius: 8px; }
+	.p-seg button { position: relative; z-index: 1; padding: 4px 0; font-size: 12.5px; color: #3a3a3c; border-radius: 6px; transition: color 0.2s; }
+	.p-seg button[aria-selected='true'] { color: #000; font-weight: 600; }
+	.p-seg-thumb { position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc((100% - 4px) / 3); background: #fff; border-radius: 6px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14); transition: transform 0.32s cubic-bezier(0.3, 1.2, 0.4, 1); }
+	.p-seg-small { margin: 0 0 9px; grid-template-columns: repeat(3, 1fr); }
+	.p-seg-small button { font-size: 11.5px; padding: 3px 0; }
+	.p-seg-small button[aria-selected='true'] { background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12); }
+	.p-body { border-top: 0.5px solid rgba(0, 0, 0, 0.09); }
+	.p-view { animation: p-in 0.35s ease both; }
+	@keyframes p-in { from { opacity: 0; transform: translateY(4px); } }
+	.p-sec { padding: 11px 14px; border-bottom: 0.5px solid rgba(0, 0, 0, 0.08); }
+	.p-h { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 600; color: var(--pm); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 7px; }
+	.p-row-gap { margin: 2px 0 6px; }
+	.p-strong { font-size: 12px; color: var(--pf); text-transform: none; letter-spacing: 0; }
+	.p-case { font-weight: 600; }
+	.p-light { font-weight: 400; text-transform: none; letter-spacing: 0; }
+	.p-pill { font-size: 10.5px; padding: 2px 8px; border-radius: 10px; background: #e3e3e6; color: #3a3a3c; text-transform: none; letter-spacing: 0; font-weight: 500; transition: background 0.3s; }
+	.p-link { text-transform: none; letter-spacing: 0; font-weight: 500; color: #0a84ff; cursor: pointer; }
+	.p-big { display: flex; gap: 16px; font-variant-numeric: tabular-nums; }
+	.p-big div { flex: 1; }
+	.p-big b { display: block; font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+	.p-big span { font-size: 10.5px; color: var(--pm); }
+	.p-big .down { color: #0a84ff; }
+	.p-big .up { color: #30a46c; }
+	.p-spark { width: 100%; height: 34px; margin-top: 8px; overflow: visible; }
+	.p-spark polyline { fill: none; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+	.line-down { stroke: #0a84ff; }
+	.line-up { stroke: #30a46c; opacity: 0.9; }
+	.p-bar { height: 6px; border-radius: 3px; background: #e3e3e6; overflow: hidden; margin: 2px 0 5px; }
+	.p-bar i { display: block; height: 100%; border-radius: 3px; background: #0a84ff; transition: width 0.8s cubic-bezier(0.3, 1, 0.3, 1), background 0.4s; }
+	.p-small { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--pm); font-variant-numeric: tabular-nums; }
+	.p-top .row, .p-apps .row { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-variant-numeric: tabular-nums; }
+	.p-apps .row { padding: 4px 0; }
+	.p-ic { flex: none; width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; color: #fff; font: 700 9.5px/1 Geist, sans-serif; }
+	.row .n { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+	.row .v { font-size: 11.5px; color: #3a3a3c; white-space: nowrap; }
+	.row .bars { display: flex; height: 3px; border-radius: 2px; overflow: hidden; margin-top: 3px; transition: width 0.7s cubic-bezier(0.3, 1, 0.3, 1); }
+	.row .bars i:first-child { background: #0a84ff; }
+	.row .bars i:last-child { background: #30a46c; }
+	.row.other .n { color: var(--pm); }
+	.row.other .bars i { background: #a1a1a6 !important; }
+	.p-chart { position: relative; display: flex; align-items: flex-end; gap: 2px; height: 86px; border-bottom: 1px solid #d1d1d6; margin-bottom: 4px; }
+	.p-chart i { flex: 1; border-radius: 2px 2px 0 0; background: #0a84ff; opacity: 0.32; transform-origin: bottom; transition: opacity 0.15s, transform 0.5s cubic-bezier(0.3, 1.1, 0.4, 1); cursor: pointer; }
+	.p-chart i.today { opacity: 1; }
+	.p-chart i:hover { opacity: 0.85; }
+	.p-pace { position: absolute; left: 0; right: 0; bottom: 70%; border-top: 1px dashed #ff453a; pointer-events: none; }
+	.p-table div { display: flex; justify-content: space-between; font-size: 11.5px; padding: 2px 0; font-variant-numeric: tabular-nums; }
+	.p-table div span:last-child { color: #3a3a3c; }
+	.p-foot { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: #efeff1; font-size: 11.5px; color: #3a3a3c; }
+	.p-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #30a46c; margin-right: 6px; box-shadow: 0 0 0 0 rgba(48, 164, 108, 0.5); animation: p-pulse 2s infinite; }
+	@keyframes p-pulse { 70% { box-shadow: 0 0 0 6px rgba(48, 164, 108, 0); } 100% { box-shadow: 0 0 0 0 rgba(48, 164, 108, 0); } }
+	.p-icons { display: flex; gap: 12px; }
+	.p-icons svg { width: 13px; height: 13px; fill: #3a3a3c; stroke: #3a3a3c; }
+	@media (prefers-reduced-motion: reduce) { .p-dot { animation: none; } .p-view { animation: none; } }
+</style>
