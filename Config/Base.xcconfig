@@ -1,0 +1,6 @@
+// Unsigned contributors build ad hoc ("Sign to Run Locally").
+// To sign with your own certificate, copy Local.xcconfig.example to Local.xcconfig.
+CODE_SIGN_IDENTITY = -
+DEVELOPMENT_TEAM =
+
+#include? "Local.xcconfig"
