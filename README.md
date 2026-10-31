@@ -2,6 +2,8 @@
 
 NetPulse is a native macOS menu bar app that shows live network speed and how much traffic this Mac has used, per app, per network and over time. It runs entirely on your Mac: no telemetry, no accounts, no network calls of its own.
 
+**Website:** https://venkataphanindravutla.github.io/NetPulse/ · **Download:** [latest release](https://github.com/venkataPhanindraVutla/NetPulse/releases/latest)
+
 - Live download and upload speed in the menu bar (stacked, single line, download-only or icon-only).
 - Per-app usage for today, this week and this month, filterable by network.
 - Per-network totals with optional daily and monthly caps, and a notification at 80% and 100%.

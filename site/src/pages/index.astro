@@ -1,16 +1,249 @@
 ---
+import '../styles/global.css';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const img = (name: string) => `${base}img/${name}`;
+const repo = 'https://github.com/venkataPhanindraVutla/NetPulse';
+const version = '0.1.0';
+const download = `${repo}/releases/download/v${version}/NetPulse-${version}.dmg`;
+const description = 'NetPulse is a free, open-source macOS menu bar app that shows live network speed and breaks your data usage down by app and by network. Everything stays on your Mac.';
+
+const tabs = [
+	{ name: 'Now', image: 'now-light.png', text: 'Live download and upload speed, today\'s totals, and how close you are to your cap.' },
+	{ name: 'Apps', image: 'apps-light.png', text: 'Every app ranked by usage for today, this week or this month, on one network or all of them.' },
+	{ name: 'History', image: 'history-light.png', text: 'Daily bars for the month with your cap\'s pace line, and totals for week, month and last month.' },
+];
+
+const facts = [
+	{ value: '1 s', label: 'live speed refresh' },
+	{ value: '~1%', label: 'CPU, measured on Apple Silicon' },
+	{ value: 'Per network', label: 'Wi-Fi, hotspot and Ethernet' },
+	{ value: '0', label: 'accounts, trackers or uploads' },
+];
 ---
 
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>NetPulse — network speed and data usage for your Mac's menu bar</title>
+		<meta name="description" content={description} />
+		<link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+		<meta property="og:title" content="NetPulse" />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL(img('hero.jpg'), Astro.site).href} />
+		<meta property="og:type" content="website" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet" />
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<nav>
+			<div class="wrap">
+				<a class="brand" href={base} aria-label="NetPulse home">
+					<img src={`${base}favicon.svg`} alt="" width="24" height="24" />NetPulse
+				</a>
+				<div class="links">
+					<a href="#features">Features</a>
+					<a href="#measuring">How it measures</a>
+					<a href="#privacy">Privacy</a>
+					<a href="#install">Install</a>
+					<a href={repo}>GitHub</a>
+				</div>
+				<a class="btn btn-primary btn-sm" href={download}>Download</a>
+			</div>
+		</nav>
+
+		<header class="hero">
+			<div class="wrap">
+				<a class="eyebrow" href={`${repo}/releases/tag/v${version}`}><span class="dot"></span>Version {version} · free and open source</a>
+				<h1>See where your bandwidth goes.</h1>
+				<p class="lede">NetPulse sits in your menu bar with live download and upload speed, and breaks every megabyte down by app and by network. Nothing leaves your Mac.</p>
+				<div class="cta">
+					<a class="btn btn-primary" href={download}>
+						<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8m0 0L5 7m3 3 3-3M3 13h10" /></svg>
+						Download for macOS
+					</a>
+					<a class="btn btn-ghost" href={repo}>View on GitHub</a>
+				</div>
+				<p class="meta">macOS 14 or later · 1 MB · Apple Silicon and Intel</p>
+			</div>
+		</header>
+
+		<div class="stage-wrap">
+			<div class="stage" role="img" aria-label="A MacBook on a white desk with the NetPulse panel open under its menu bar speed readout">
+				<div class="np-label" aria-hidden="true"><span>↑ 1.2M</span><span>↓ 8.4M</span></div>
+				<img class="np-pop" src={img('now-light.png')} alt="" loading="eager" />
+			</div>
+			<p class="caption">Photo by Rubén Menárguez on Unsplash · panel shown with sample data</p>
+		</div>
+
+		<section id="features">
+			<div class="wrap">
+				<p class="kicker">One click from the menu bar</p>
+				<h2>Live speed, the apps behind it, and the month so far.</h2>
+				<p class="sub">Three tabs answer the three questions you actually have: is the network slow, which app used my data, and am I staying under my cap.</p>
+				<div class="tabs">
+					{tabs.map((tab) => (
+						<article class="card">
+							<div class="shot"><img src={img(tab.image)} alt={`The ${tab.name} tab`} loading="lazy" width="320" /></div>
+							<div class="text">
+								<h3>{tab.name}</h3>
+								<p>{tab.text}</p>
+							</div>
+						</article>
+					))}
+				</div>
+				<div class="facts">
+					{facts.map((fact) => (
+						<div class="fact"><b>{fact.value}</b><span>{fact.label}</span></div>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section id="networks" class="split-section">
+			<div class="wrap split">
+				<div>
+					<p class="kicker">Per network</p>
+					<h2>Your hotspot cap only counts hotspot traffic.</h2>
+					<p class="sub">Usage is split by the network it travelled over: home Wi-Fi, your phone's hotspot, the office Ethernet. Give each one its own daily or monthly cap and billing day, and get one notification at 80% and one at 100%. No repeats.</p>
+					<ul class="ticks">
+						<li>Menu bar label: stacked, single line, download only or icon only</li>
+						<li>MB/s or Mbps</li>
+						<li>Pause, resume and launch at login</li>
+					</ul>
+				</div>
+				<div class="split-shot"><img src={img('now-dark.png')} alt="The Now tab in dark mode" loading="lazy" width="320" /></div>
+			</div>
+		</section>
+
+		<section id="measuring">
+			<div class="wrap">
+				<p class="kicker">How it measures</p>
+				<h2>Honest numbers, including what it can't see.</h2>
+				<div class="grid">
+					<div class="item"><h3>Network totals</h3><p>Read from the macOS 64-bit interface counters every second. Virtual interfaces like VPN tunnels are never counted twice.</p></div>
+					<div class="item"><h3>Per-app usage</h3><p>From macOS's built-in <code>nettop</code>, sampled every 10 seconds. Helper processes are grouped under the app they belong to.</p></div>
+					<div class="item"><h3>Other / system</h3><p>Traffic that can't be tied to an app, such as protocol overhead or very short-lived processes, is shown as its own row, so the per-app list always adds up to the total.</p></div>
+					<div class="item"><h3>Device traffic, not your bill</h3><p>NetPulse counts what your Mac sends and receives. Your provider may count differently. Time when NetPulse isn't running is marked as missing.</p></div>
+				</div>
+			</div>
+		</section>
+
+		<section id="privacy">
+			<div class="wrap split">
+				<div>
+					<p class="kicker">Privacy</p>
+					<h2>Local by design.</h2>
+					<p class="sub">No account, no telemetry, and NetPulse makes no network connections of its own. Your history is a small SQLite file on your Mac that you can delete any time.</p>
+				</div>
+				<ul class="ticks">
+					<li><strong>Location</strong> is asked once, only to read your Wi-Fi network's name. Decline it and NetPulse names networks by their router instead.</li>
+					<li><strong>Notifications</strong> are asked for only when you turn on a cap.</li>
+					<li>Data lives in <code>~/Library/Application Support/NetPulse</code>.</li>
+					<li>MIT licensed. Read every line on GitHub.</li>
+				</ul>
+			</div>
+		</section>
+
+		<section id="install">
+			<div class="wrap">
+				<p class="kicker">Install</p>
+				<h2>Three steps, one of them unusual.</h2>
+				<ol class="steps">
+					<li><b>Download</b><p>Get <a class="link" href={download}>NetPulse-{version}.dmg</a> and drag NetPulse into Applications.</p></li>
+					<li><b>Open it the first time</b><p>This build isn't notarized yet, so macOS will refuse to open it. Right-click NetPulse in Applications and choose <em>Open</em>, or click <em>Open Anyway</em> in System Settings › Privacy &amp; Security.</p></li>
+					<li><b>Find it in the menu bar</b><p>If your menu bar is full, macOS can hide new icons behind the notch. Allow NetPulse in System Settings › Menu Bar or remove an icon or two. Double-clicking NetPulse in Applications also opens its panel.</p></li>
+				</ol>
+				<div class="source">
+					<span>Prefer to build it yourself? It's a Swift package plus an Xcode project generated by xcodegen.</span>
+					<a class="btn btn-ghost btn-sm" href={`${repo}#readme`}>Build from source</a>
+				</div>
+			</div>
+		</section>
+
+		<footer>
+			<div class="wrap">
+				<span>NetPulse · MIT licensed · <a class="link" href={repo}>GitHub</a></span>
+				<span>Hero photo by <a class="link" href="https://unsplash.com/photos/macbook-on-top-white-table-v_1t1DzfAUA">Rubén Menárguez</a> on Unsplash</span>
+			</div>
+		</footer>
 	</body>
 </html>
+
+<style>
+	nav { position: sticky; top: 0; z-index: 10; background: rgba(255, 255, 255, 0.82); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--border); }
+	nav .wrap { display: flex; align-items: center; height: 60px; gap: 28px; }
+	.brand { display: flex; align-items: center; gap: 9px; font-weight: 600; letter-spacing: -0.01em; }
+	.brand img { border-radius: 7px; }
+	nav .links { display: flex; gap: 22px; margin-left: auto; font-size: 14px; color: var(--muted); }
+	nav .links a:hover { color: var(--fg); }
+
+	.hero { padding: 76px 0 28px; text-align: center; }
+	.eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; transition: border-color 0.15s; }
+	.eyebrow:hover { border-color: #a1a1aa; }
+	.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--up); }
+	h1 { font-size: clamp(40px, 6.4vw, 72px); line-height: 1.03; letter-spacing: -0.04em; font-weight: 600; margin: 22px auto 18px; max-width: 13ch; }
+	.lede { font-size: 18px; color: var(--muted); max-width: 46ch; margin: 0 auto; }
+	.cta { display: flex; gap: 10px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+	.meta { margin-top: 12px; font-size: 13px; color: var(--muted); }
+
+	.stage-wrap { max-width: 1288px; margin: 44px auto 0; padding: 0 24px 24px; }
+	.stage { position: relative; aspect-ratio: 2400 / 1429; border-radius: 18px; overflow: hidden; background: #ececec center / cover no-repeat; background-image: var(--hero); }
+	.np-label { position: absolute; left: 57.9%; top: 21.55%; height: 1.25%; display: flex; flex-direction: column; justify-content: center; font: 600 clamp(3px, 0.48vw, 7px) / 1 'Geist Mono', monospace; color: #111; background: rgba(0, 0, 0, 0.08); padding: 0 0.35%; border-radius: 2px; }
+	.np-pop { position: absolute; left: 53.6%; top: 23.4%; width: 9.6%; border-radius: 6px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 0 0.5px rgba(0, 0, 0, 0.12); }
+	.caption { text-align: right; font-size: 12px; color: var(--muted); margin-top: 8px; padding: 0 6px; }
+
+	.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 44px; }
+	.card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--soft); overflow: hidden; display: flex; flex-direction: column; }
+	.shot { padding: 26px 26px 0; display: flex; justify-content: center; align-items: flex-start; height: 380px; overflow: hidden; }
+	.shot img { width: 100%; max-width: 272px; border-radius: 10px; box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05); }
+	.card .text { background: #fff; border-top: 1px solid var(--border); padding: 18px 20px 20px; flex: 1; }
+	h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+	.card p, .item p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+	.facts { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--border); border-radius: var(--radius); margin-top: 20px; }
+	.fact { padding: 22px; border-right: 1px solid var(--border); }
+	.fact:last-child { border-right: 0; }
+	.fact b { display: block; font-size: 26px; letter-spacing: -0.02em; font-weight: 600; }
+	.fact span { font-size: 13px; color: var(--muted); }
+
+	.split { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+	.split-shot { display: flex; justify-content: center; background: var(--soft); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; }
+	.split-shot img { max-width: 300px; border-radius: 12px; box-shadow: 0 10px 34px rgba(0, 0, 0, 0.18); }
+	.ticks { list-style: none; padding: 0; margin-top: 22px; display: grid; gap: 12px; }
+	.ticks li { position: relative; padding-left: 26px; color: #3f3f46; font-size: 15px; }
+	.ticks li::before { content: ''; position: absolute; left: 0; top: 7px; width: 14px; height: 9px; border-left: 2px solid var(--up); border-bottom: 2px solid var(--up); transform: rotate(-45deg); transform-origin: left top; translate: 2px 4px; }
+
+	.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 40px; }
+	.item { background: #fff; padding: 26px; }
+
+	.steps { list-style: none; padding: 0; counter-reset: step; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+	.steps li { counter-increment: step; border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+	.steps li::before { content: counter(step); display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--fg); color: #fff; font: 600 13px 'Geist Mono', monospace; margin-bottom: 14px; }
+	.steps b { font-weight: 600; }
+	.steps p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+	.link { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #a1a1aa; }
+	.link:hover { text-decoration-color: currentColor; }
+	.source { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 20px; padding: 16px 20px; border-radius: var(--radius); background: var(--soft); font-size: 14px; color: var(--muted); }
+
+	footer { border-top: 1px solid var(--border); padding: 28px 0; font-size: 13px; color: var(--muted); }
+	footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+	@media (max-width: 900px) {
+		nav .links { display: none; }
+		nav .wrap { justify-content: space-between; }
+		.tabs, .facts, .steps, .grid, .split { grid-template-columns: 1fr; }
+		.split { gap: 36px; }
+		.fact { border-right: 0; border-bottom: 1px solid var(--border); }
+		.fact:last-child { border-bottom: 0; }
+		.stage { border-radius: 12px; }
+		section { padding: 72px 0; }
+	}
+</style>
+
+<style define:vars={{ hero: `url(${img('hero.jpg')})` }}>
+	.stage { background-image: var(--hero); }
+</style>
